@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+:root {
+    --color-primary: #2563eb;
+    --color-secondary: #1e40af;
+    --color-success: #22c55e;
+    --color-stats: #f59e0b;
+    --color-purple: #9333ea;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}

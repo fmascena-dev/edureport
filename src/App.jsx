@@ -1,13 +1,11 @@
-function App (){
+function App() {
   return (
-    
-    <div>
-      <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <div class="bg-gray-950">
+      <h1 class="text-3xl text-[var(--color-primary)] font-bold underline text-center">
+        EduReport!
+      </h1>
     </div>
-    
-  )
+  );
 }
 
-export default  App
+export default App;
