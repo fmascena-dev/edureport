@@ -1,0 +1,195 @@
+:root {
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-success: #22c55e;
+  --color-success-hover: #147739; /* adicionado pro hover de cadastrar */
+  --color-purple: #9333ea;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-300: #d1d5db; /* adicionado pra border de inputs */
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-500: #6b7280;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--color-gray-50);
+  min-height: 100vh;
+}
+
+/* || TOP-NAVBAR */
+
+.navbar {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.navbar-logo-icon {
+  height: 2rem;
+  width: 2rem;
+  color: var(--color-primary);
+}
+
+.navbar-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.navbar-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+/* || BUTTONS */
+
+.btn {
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 300ms;
+  border: 2px solid;
+}
+
+.btn-purple {
+  color: var(--color-purple);
+  border-color: var(--color-purple);
+}
+
+.btn-purple:hover {
+  background-color: #faf5ff;
+}
+
+.btn-blue-outline {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-blue-outline:hover {
+  background-color: #eff6ff;
+}
+
+.btn-blue-solid {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-blue-solid:hover {
+  background-color: var(--color-secondary);
+}
+
+.cadastroUser-form button[type="submit"] {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--color-success);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.cadastroUser-form button[type="submit"]:hover {
+  background-color: var(--color-success-hover);
+}
+
+/* || MAIN CONTENT */
+
+.main-content {
+  padding-top: 5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.h1__create-account {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+/* || FORM CADATRO USER */
+.cadastroUser-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.form-grid p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-grid label {
+  font-weight: 500;
+  color: var(--color-gray-700);
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.cadastroUser-form > p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.cadastroUser-form > p input {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
