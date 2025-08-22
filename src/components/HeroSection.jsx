@@ -2,7 +2,7 @@ import React from 'react';
 
 const HeroSection = () => {
   return (
-    <header className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-24 md:py-32 text-center overflow-hidden">
+    <header className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-stone py-24 md:py-32 text-center overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-4">
           Sua voz muda a escola
