@@ -5,6 +5,7 @@ import SignUpPage from "./pages/SignUpPage.jsx";
 import SignUpUser from "./pages/SignUpUser.jsx";
 import LoginPage from "./pages/LoginPage.jsx"
 import SeePublicComplaints from "./pages/SeePublicComplaints.jsx";
+import HowItWorksSection from "./components/HowItWorks.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup-user" element={<SignUpUser />} />
           <Route path="/seepubliccomplaints" element={<SeePublicComplaints />} />
+          <Route path="/howitworks" element={<HowItWorksSection />} />
         </Routes>
       </Router>
     </>
