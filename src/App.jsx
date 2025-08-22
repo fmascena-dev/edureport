@@ -7,6 +7,7 @@ import Login from "./pages/Login.jsx";
 import SeePublicComplaints from "./pages/SeePublicComplaints.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+
 const App = () => {
   return (
     <>
@@ -20,7 +21,6 @@ const App = () => {
           <Route path="/seepubliccomplaints" element={<SeePublicComplaints />} />
         </Routes>
       </Router>
-      
     </>
   );
 };
