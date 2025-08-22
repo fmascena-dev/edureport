@@ -15,6 +15,13 @@ const Navbar = () => {
 
       </div>
       <div className="space-x-4">
+
+        <NavLink to="/howitworks">
+          <button className="text-purple-600 font-semibold py-2 px-4 rounded-full border-2 border-purple-600 hover:bg-purple-50 transition duration-300">
+            Como Funciona
+          </button>
+        </NavLink>
+
         <NavLink to="/seepubliccomplaints">
           <button className="text-purple-600 font-semibold py-2 px-4 rounded-full border-2 border-purple-600 hover:bg-purple-50 transition duration-300">
             Ver Denúncias Públicas
