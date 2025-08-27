@@ -3,6 +3,7 @@ import SelectField from "../components/signup/SelectField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { NavLink } from "react-router-dom";
 
 const schema = z.object({
   userType: z.string().min(1, "Selecione um tipo de usuário"),
@@ -44,11 +45,13 @@ const SignUpPage = () => {
             />
 
             {/* Botão */}
-            <button
-              type="submit"
-              className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
-              Criar Conta
-            </button>
+            <NavLink to="/signup-user">
+              <button
+                type="submit"
+                className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
+                Criar Conta
+              </button>
+            </NavLink>
           </form>
         </div>
       </section>
