@@ -7,7 +7,7 @@ import SignUpSchool from "./pages/SignUpSchool.jsx";
 import SignUpAdmin from "./pages/SignUpAdmin.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SeePublicComplaints from "./pages/SeePublicComplaints.jsx";
-import HowItWorksSection from "./components/HowItWorks.jsx";
+import HowItWorksPage from "./pages/HowItWorksPage.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
             path="/seepubliccomplaints"
             element={<SeePublicComplaints />}
           />
-          <Route path="/howitworks" element={<HowItWorksSection />} />
+          <Route path="/howitworks" element={<HowItWorksPage />} />
         </Routes>
       </Router>
     </>
