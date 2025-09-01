@@ -10,6 +10,7 @@ import SeePublicComplaints from "./pages/SeePublicComplaints.jsx"
 import HowItWorksPage from "./pages/HowItWorksPage.jsx"
 import AdminProfile from "./pages/AdminProfile.jsx"
 import SchoolProfile from "./pages/SchoolProfile.jsx"
+import StudentProfile from "./pages/StudentProfile.jsx"
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/howitworks" element={<HowItWorksPage />} />
           <Route path="/adminprofile" element={<AdminProfile />} />
           <Route path="/schoolprofile" element={<SchoolProfile />} />
+          <Route path="/studentprofile" element={<StudentProfile />} />
         </Routes>
       </Router>
     </>
