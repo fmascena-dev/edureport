@@ -185,11 +185,14 @@ const SignUpForm = () => {
       </div>
 
       {/* Botão */}
-      <div className="px-2">
+      <NavLink to='/studentprofile'>
+        <div className="px-2">
           <button className=" mb-4 w-full p-3  text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
             Continuar
           </button>
-      </div>
+        </div>
+      </NavLink>
+
     </form>
   );
 };

@@ -12,7 +12,6 @@ const AdminProfile = () => {
     state,
     city,
     neighborhood,
-    schoolName,
   } = studentData || {}
 
   return (
