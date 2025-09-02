@@ -1,6 +1,9 @@
 // Importa useForm do react-hook-form para controlar formulários
 import { useForm } from "react-hook-form";
 
+import { NavLink } from "react-router-dom"
+// Importa NavLink do react-router-dom para navegação entre páginas sem recarregar a página
+
 // Importa o zodResolver que integra o Zod com react-hook-form
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -209,7 +212,6 @@ const SignUpForm = () => {
         />
       </div>
 
-<<<<<<< Updated upstream
       {/* Botão */}
       <NavLink to='/studentprofile'>
         <div className="px-2">
@@ -219,14 +221,6 @@ const SignUpForm = () => {
         </div>
       </NavLink>
 
-=======
-      {/* Botão de envio */}
-      <div className="px-2">
-        <button className="mb-4 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md cursor-pointer">
-          Continuar
-        </button>
-      </div>
->>>>>>> Stashed changes
     </form>
   );
 };
