@@ -1,8 +1,8 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
 
 const StudentProfile = () => {
-  const { state: studentData } = useLocation()
+  // Recebe os dados do aluno via estado da rota
+  const { state: studentData } = useLocation();
 
   const {
     fullName,
@@ -13,15 +13,18 @@ const StudentProfile = () => {
     city,
     neighborhood,
     schoolName,
-  } = studentData || {}
+  } = studentData || {};
 
   return (
     <section className="p-28 w-full max-w-4xl mx-auto px-4">
+      {/* Título da página */}
       <h1 className="flex justify-center mb-8 text-blue-600 text-3xl font-bold">
         Perfil do Aluno
       </h1>
-      
+
+      {/* Card do perfil */}
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        {/* Cabeçalho azul */}
         <div className="bg-blue-600 h-40 relative flex items-center justify-center">
           <div className="absolute left-12">
             <img
@@ -32,13 +35,13 @@ const StudentProfile = () => {
           </div>
         </div>
 
+        {/* Conteúdo do perfil */}
         <div className="pt-16 pb-8 px-6">
           <h2 className="text-2xl font-bold text-gray-800">{fullName}</h2>
-          {socialName && (
-            <p className="text-sm text-gray-500 italic">({socialName})</p>
-          )}
+          {socialName && <p className="text-sm text-gray-500 italic">({socialName})</p>}
           <p className="mt-2 text-gray-600">{email}</p>
 
+          {/* Informações adicionais */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left text-sm text-gray-700">
             <div className="bg-gray-50 p-4 rounded-lg">
               <span className="font-semibold text-gray-800">Data de Nascimento:</span>
@@ -62,6 +65,7 @@ const StudentProfile = () => {
             </div>
           </div>
 
+          {/* Botão para editar perfil */}
           <div className="mt-8 flex justify-center">
             <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200">
               Editar Perfil
@@ -70,7 +74,7 @@ const StudentProfile = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default StudentProfile
+export default StudentProfile;
