@@ -139,7 +139,7 @@ const AdminProfile = () => {
               Editar Perfil
             </button>
             <NavLink to="/admincontrolpanel">
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200">
+              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">
                 Voltar ao Painel
               </button>
             </NavLink>
