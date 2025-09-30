@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Select from "react-select";
 
 // listas de tags
 const BadTags = [
@@ -41,11 +40,19 @@ const ComplaintRegister = () => {
   };
 
   // remover tag clicando nela do lado da imagem
-  const removeTag = (tag, type) => {
+  const toggleTag = (tag, type) => {
     if (type === "bad") {
-      setSelectedBad((prev) => prev.filter((t) => t.value !== tag.value));
+      setSelectedBad((prev) =>
+        prev.some((t) => t.value === tag.value)
+          ? prev.filter((t) => t.value !== tag.value)
+          : [...prev, tag]
+      );
     } else {
-      setSelectedGood((prev) => prev.filter((t) => t.value !== tag.value));
+      setSelectedGood((prev) =>
+        prev.some((t) => t.value === tag.value)
+          ? prev.filter((t) => t.value !== tag.value)
+          : [...prev, tag]
+      );
     }
   };
 
@@ -73,105 +80,73 @@ const ComplaintRegister = () => {
 
             {/* tags selecionadas aparecem aqui */}
             <div className="flex flex-col gap-2">
-              <h3 className="font-semibold">Tags negativas:</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedBad.map((tag) => (
-                  <span
-                    key={tag.value}
-                    onClick={() => removeTag(tag, "bad")}
-                    className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-red-200"
-                    title="Clique para remover">
-                    {tag.label} ✕
-                  </span>
-                ))}
-              </div>
-
-              <h3 className="font-semibold mt-4">Tags positivas:</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedGood.map((tag) => (
-                  <span
-                    key={tag.value}
-                    onClick={() => removeTag(tag, "good")}
-                    className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-green-200"
-                    title="Clique para remover">
-                    {tag.label} ✕
-                  </span>
-                ))}
-              </div>
+              <h3>
+                sei la, da pra colocar as estatísticas do feedback q essa escola
+                teve
+              </h3>
+              <p>
+                ou a imagem da escola pode ser landscape e opcupar toda essa
+                parte horizontal
+              </p>
+              <p>
+                tem q melhorar essas tags tb, qlquer coisa é só adicionar no
+                array q ta no inicio do código dessa página
+              </p>
+              <p>
+                talvez tb tirar o texto de "tags negativas" e "tags positivas" n
+                tenho ctz. Ou o texto "Avaliar Escola" lá em cima
+              </p>
             </div>
           </div>
 
-          {/* selects com react-select */}
+          {/* Lista das tags e interação */}
           <div className="grid grid-cols-2 gap-4 mt-6">
-            <div>
+            <div className="flex flex-col gap-2">
               <label className="font-medium text-gray-700">
                 Tags negativas
               </label>
-              <Select
-                options={BadTags}
-                isMulti
-                value={[] /* não mostra chips */}
-                onChange={(newValue) => {
-                  // react-select retorna array de todas selecionadas
-                  // então mesclamos com já selecionadas
-                  setSelectedBad((prev) => {
-                    const combined = [...prev, ...newValue];
-                    // remove duplicados
-                    return combined.filter(
-                      (v, i, a) => a.findIndex((t) => t.value === v.value) === i
-                    );
-                  });
-                }}
-                placeholder="Selecione tags negativas..."
-                menuPortalTarget={document.body}
-                components={{ MultiValue: () => null }}
-                styles={{
-                  menu: (base) => ({
-                    ...base,
-                    maxHeight: 220,
-                    overflowY: "hidden",
-                  }),
-                  menuPortal: (base) => ({
-                    ...base,
-                    zIndex: 9999,
-                    overflow: "visible",
-                  }),
-                }}
-              />
+
+              {BadTags.map((tag) => {
+                const isSelected = selectedBad.some(
+                  (t) => t.value === tag.value
+                );
+                return (
+                  <button
+                    key={tag.value}
+                    onClick={() => toggleTag(tag, "bad")}
+                    className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                      isSelected
+                        ? "bg-red-200 border-red-500"
+                        : "border-red-400 hover:bg-red-50"
+                    }`}>
+                    {tag.label}
+                  </button>
+                );
+              })}
             </div>
 
-            <div>
+            <div className="flex flex-col gap-2">
               <label className="font-medium text-gray-700">
                 Tags positivas
               </label>
-              <Select
-                options={GoodTags}
-                isMulti
-                value={[] /* não mostra chips */}
-                onChange={(newValue) => {
-                  setSelectedGood((prev) => {
-                    const combined = [...prev, ...newValue];
-                    return combined.filter(
-                      (v, i, a) => a.findIndex((t) => t.value === v.value) === i
-                    );
-                  });
-                }}
-                placeholder="Selecione tags positivas..."
-                menuPortalTarget={document.body}
-                components={{ MultiValue: () => null }}
-                styles={{
-                  menu: (base) => ({
-                    ...base,
-                    maxHeight: 220,
-                    overflowY: "hidden",
-                  }),
-                  menuPortal: (base) => ({
-                    ...base,
-                    zIndex: 9999,
-                    overflow: "visible",
-                  }),
-                }}
-              />
+
+              {GoodTags.map((tag) => {
+                const isSelected = selectedGood.some(
+                  (t) => t.value === tag.value
+                );
+                return (
+                  <button
+                    key={tag.value}
+                    onClick={() => toggleTag(tag, "good")}
+                    className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                      isSelected
+                        ? "bg-green-200 border-green-500"
+                        : "border-green-400 hover:bg-green-50"
+                    }`}>
+                    {tag.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
