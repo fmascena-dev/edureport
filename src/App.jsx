@@ -31,16 +31,21 @@ const App = () => {
           <Route path="/signup-user" element={<SignUpUser />} />
           <Route path="/signup-school" element={<SignUpSchool />} />
           <Route path="/signup-admin" element={<SignUpAdmin />} />
-          <Route path="/seepubliccomplaints" element={<SeePublicComplaints />}/>
+          <Route
+            path="/seepubliccomplaints"
+            element={<SeePublicComplaints />}
+          />
           <Route path="/howitworks" element={<HowItWorksPage />} />
           <Route path="/adminprofile" element={<AdminProfile />} />
           <Route path="/schoolprofile" element={<SchoolProfile />} />
           <Route path="/studentprofile" element={<StudentProfile />} />
           <Route path="/complaintregister" element={<ComplaintRegister />} />
-
           <Route path="/admincontrolpanel" element={<AdminControlPainel />} />
           <Route path="/schoolcontrolpanel" element={<SchoolControlPanel />} />
-          <Route path="/studentcontrolpanel" element={<StudentControlPanel />} />
+          <Route
+            path="/studentcontrolpanel"
+            element={<StudentControlPanel />}
+          />
         </Routes>
       </Router>
     </>

@@ -1,5 +1,6 @@
 // Importa useForm do react-hook-form para controlar formulários
 import { useForm } from "react-hook-form";
+import { api } from "../../api/api";
 
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 // Importa NavLink do react-router-dom para navegação entre páginas sem recarregar a página
@@ -99,12 +100,30 @@ const SignUpForm = () => {
   const navigate = useNavigate();
 
   // Função chamada quando o formulário é enviado com sucesso
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data) => {
+    try {
+      const newUser = {
+        full_name: data.fullName,
+        social_name: data.socialName,
+        email: data.email,
+        password_hash: data.password,
+        birth_date: data.dateOfBirth.split("/").reverse().join("-"),
+        user_type: "student",
+        address_state: data.state,
+        address_city: data.city,
+        address_neighborhood: data.neighborhood,
+      };
+      const createdUser = await api.createUser(newUser);
+      const newStudent = {
+        user: { user_id: createdUser.user_id },
+      };
 
-    navigate("/studentprofile");
-
-    // Aqui você poderia enviar os dados para um backend via API
+      await api.createStudent(newStudent);
+      navigate("/studentprofile");
+    } catch (error) {
+      console.error("Erro ao cadastrar aluno: ", error);
+      alert("Erro ao cadastrar aluno. Ver console");
+    }
   };
 
   // ------------------------------
@@ -224,7 +243,6 @@ const SignUpForm = () => {
             Continuar
           </button>
         </NavLink>
-
       </div>
     </form>
   );

@@ -3,7 +3,7 @@ import React from "react";
 
 // Importa o NavLink para navegação (react-router-dom)
 import { NavLink, useNavigate } from "react-router-dom";
-
+import { api } from "../../api/api";
 // Importa hooks e utilitários do react-hook-form
 import { useForm } from "react-hook-form";
 
@@ -95,10 +95,30 @@ const SignUpForm = () => {
   const navigate = useNavigate();
 
   // Função chamada ao submeter o formulário
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-    // Aqui é onde você faria a chamada ao backend
-    navigate("/adminprofile");
+  const onSubmit = async (data) => {
+    try {
+      const newUser = {
+        full_name: data.fullName,
+        social_name: data.socialName,
+        email: data.email,
+        password_hash: data.password,
+        birth_date: data.dateOfBirth.split("/").reverse().join("-"),
+        user_type: "admin",
+        address_state: data.state,
+        address_city: data.city,
+        address_neighborhood: data.neighborhood,
+      };
+      const createdUser = await api.createUser(newUser);
+      const newAdmin = {
+        user: { user_id: createdUser.user_id },
+      };
+
+      await api.createAdmin(newAdmin);
+      navigate("/admincontrolpanel");
+    } catch (error) {
+      console.error("Erro ao cadastrar aluno: ", error);
+      alert("Erro ao cadastrar aluno. Ver console");
+    }
   };
 
   return (
@@ -211,11 +231,10 @@ const SignUpForm = () => {
               neighborhood: watch('neighborhood'),
             }}
           */}
-        <NavLink to="/admincontrolpanel">
-          <button className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
-            Continuar
-          </button>
-        </NavLink>
+
+        <button className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
+          Continuar
+        </button>
       </div>
     </form>
   );

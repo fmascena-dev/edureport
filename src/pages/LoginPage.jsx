@@ -1,9 +1,38 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { api } from "../api/api";
 
 // Componente funcional da página de login
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const users = await api.login(email, password);
+
+      if (!users || users.length === 0) {
+        alert("email ou senha inválidos");
+        return;
+      }
+      const user = users[0];
+      if (user.user_type === "school") {
+        navigate("/schoolcontrolpanel");
+      } else if (user.user_type === "admin") {
+        navigate("/admincontronpanel");
+      } else {
+        navigate("/studentcontrolpanel");
+      }
+
+      localStorage.setItem("currentUser", JSON.stringify(user));
+    } catch (error) {
+      console.error("Erro ao login:", error);
+      alert("Erro ao efetuar login. veja  console");
+    }
+  };
   return (
     <div className="flex h-screen">
       {/*
@@ -93,50 +122,54 @@ const LoginPage = () => {
             Faça login para acessar sua conta
           </p>
 
-          {/* Campo de email */}
-          <label className="block text-sm mb-1">Email</label>
-          <input
-            type="email"
-            placeholder="seu@email.com"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-
-          {/* Campo de senha */}
-          <label className="block text-sm mt-3 mb-1">Senha</label>
-          <div className="relative">
+          <form onSubmit={handleLogin}>
+            <label className="block text-sm mb-1">Email</label>
             <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Digite sua senha"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
-            <span
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-2 text-gray-500 cursor-pointer text-sm">
-              👁
-            </span>
-            {/*
+
+            {/* Campo de senha */}
+            <label className="block text-sm mt-3 mb-1">Senha</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Digite sua senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-2 text-gray-500 cursor-pointer text-sm">
+                👁
+              </span>
+              {/*
               Ícone para mostrar/ocultar senha
               - absolute: posicionamento absoluto dentro do input
               - right-3 top-2: posição no canto superior direito
             */}
-          </div>
+            </div>
 
-          {/* Lembrar de mim e esqueci a senha */}
-          <div className="flex justify-between items-center text-xs my-4">
-            <label className="flex items-center space-x-1">
-              <input type="checkbox" />
-              <span>Lembrar de mim</span>
-            </label>
-            <a href="#" className="text-blue-600 hover:underline">
-              Esqueci minha senha
-            </a>
-          </div>
+            {/* Lembrar de mim e esqueci a senha */}
+            <div className="flex justify-between items-center text-xs my-4">
+              <label className="flex items-center space-x-1">
+                <input type="checkbox" />
+                <span>Lembrar de mim</span>
+              </label>
+              <a href="#" className="text-blue-600 hover:underline">
+                Esqueci minha senha
+              </a>
+            </div>
 
-          {/* Botão de login */}
-          <button className="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">
-            Entrar
-          </button>
-
+            {/* Botão de login */}
+            <button className="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">
+              Entrar
+            </button>
+          </form>
           {/* Link para cadastro */}
           <p className="text-sm text-center mt-5">
             Não tem uma conta?{" "}
