@@ -1,6 +1,7 @@
 // Importa useForm do react-hook-form para controlar formulários
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { api } from "../../api/api";
+import AsyncSelect from "react-select/async";
 
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 // Importa NavLink do react-router-dom para navegação entre páginas sem recarregar a página
@@ -99,14 +100,37 @@ const SignUpForm = () => {
   });
   const navigate = useNavigate();
 
+  const loadSchoolOptions = async (inputValue) => {
+    if (!inputValue || inputValue.length < 2) return [];
+    try {
+      const { data } = await api.getSchoolByName(inputValue);
+      if (!data) return [];
+      const schools = Array.isArray(data) ? data : [data];
+
+      return schools.map((s) => ({
+        label: s.schoolName,
+        value: s.schoolName,
+        id: s.school_id,
+      }));
+    } catch (err) {
+      console.error("Erro ao buscar escolas:", err);
+      return [];
+    }
+  };
+
   // Função chamada quando o formulário é enviado com sucesso
   const onSubmit = async (data) => {
     try {
       const { data: schoolData } = await api.getSchoolByName(data.schoolName);
+
       if (!schoolData) {
-        alert("Escola não encontrada. Verifique o nome digitado.");
+        alert("Escola não encontrada.");
         return;
       }
+
+      const selectedSchool = Array.isArray(schoolData)
+        ? schoolData[0]
+        : schoolData;
 
       const payload = {
         fullName: data.fullName,
@@ -120,14 +144,14 @@ const SignUpForm = () => {
         addressState: data.state,
         addressCity: data.city,
         addressNeighborhood: data.neighborhood,
-        schoolId: schoolData.school_id,
+        schoolId: selectedSchool.school_id,
       };
 
       const response = await api.signUpStudent(payload);
-      console.log("Signup response:", response)
+      console.log("Signup response:", response);
 
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
       localStorage.setItem("currentUser", JSON.stringify(response));
 
       navigate("/studentprofile");
@@ -237,17 +261,29 @@ const SignUpForm = () => {
 
       {/* Escola */}
       <div className="grid grid-cols-1  w-full p-2">
-        <FormField
-          id="schoolName"
-          label="Escola:"
-          placeholder="Nome da Escola"
-          register={register}
-          errors={errors}
+        <Controller
+          name="schoolName"
+          control={control}
+          render={({ field }) => (
+            <AsyncSelect
+              casheOptions
+              loadOptions={loadSchoolOptions}
+              defaultOptions={false}
+              onChange={(option) => field.onChange(option ? option.value : "")}
+              placeholder="Digite o nome da sua escola..."
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+            />
+          )}
         />
+        {errors.schoolName && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.schoolName.message}
+          </p>
+        )}
       </div>
 
       {/* Botão */}
-
       <div className="px-2">
         <button
           type="submit"

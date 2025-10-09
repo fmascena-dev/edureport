@@ -135,6 +135,11 @@ export const api = {
     return res.data;
   },
 
+  signUpSchool: async (payload) => {
+    const res = await axios.post(`${BASE_URL}/schools/signup`, payload);
+    return res.data;
+  },
+
   getSchoolByName: async (name) => {
     const { data } = await axiosInstance.get(
       `/schools/name/${encodeURIComponent(name)}`

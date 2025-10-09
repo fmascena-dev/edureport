@@ -77,25 +77,21 @@ const SignUpFormSchool = () => {
 
   const onSubmit = async (data) => {
     try {
-      const newUser = {
-        full_name: data.schoolName,
-        email: data.email,
-        password_hash: data.password,
-        user_type: "school",
-        address_state: data.state,
-        address_city: data.city,
-        address_neighborhood: data.neighborhood,
-      };
-
-      const createdUser = await api.createUser(newUser);
-
-      const newSchool = {
+      const payload = {
+        user: {
+          full_name: data.schoolName,
+          email: data.email,
+          password_hash: data.password,
+          address_state: data.state,
+          address_city: data.city,
+          address_neighborhood: data.neighborhood,
+        },
         school_name: data.schoolName,
         school_type: data.schoolType,
-        user: { user_id: createdUser.user_id },
       };
 
-      await api.createSchool(newSchool);
+      const response = await api.signUpSchool(payload);
+      console.log("responsta do signup school:", response);
 
       //Auto-login qndo registra
       await api.login(data.email, data.password);

@@ -236,7 +236,9 @@ const SignUpForm = () => {
             }}
           */}
 
-        <button className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
+        <button
+          type="submit"
+          className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
           Continuar
         </button>
       </div>
