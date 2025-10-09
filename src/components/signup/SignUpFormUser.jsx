@@ -102,23 +102,34 @@ const SignUpForm = () => {
   // Função chamada quando o formulário é enviado com sucesso
   const onSubmit = async (data) => {
     try {
-      const newUser = {
-        full_name: data.fullName,
-        social_name: data.socialName,
+      const { data: schoolData } = await api.getSchoolByName(data.schoolName);
+      if (!schoolData) {
+        alert("Escola não encontrada. Verifique o nome digitado.");
+        return;
+      }
+
+      const payload = {
+        fullName: data.fullName,
+        socialName: data.socialName,
         email: data.email,
-        password_hash: data.password,
-        birth_date: data.dateOfBirth.split("/").reverse().join("-"),
-        user_type: "student",
-        address_state: data.state,
-        address_city: data.city,
-        address_neighborhood: data.neighborhood,
-      };
-      const createdUser = await api.createUser(newUser);
-      const newStudent = {
-        user: { user_id: createdUser.user_id },
+        password: data.password,
+        birthDate: (() => {
+          const [day, month, year] = data.dateOfBirth.split("/");
+          return `${year}-${month}-${day}`;
+        })(), // yyyy-mm-dd
+        addressState: data.state,
+        addressCity: data.city,
+        addressNeighborhood: data.neighborhood,
+        schoolId: schoolData.school_id,
       };
 
-      await api.createStudent(newStudent);
+      const response = await api.signUpStudent(payload);
+      console.log("Signup response:", response)
+
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("currentUser", JSON.stringify(response));
+
       navigate("/studentprofile");
     } catch (error) {
       console.error("Erro ao cadastrar aluno: ", error);
@@ -238,11 +249,11 @@ const SignUpForm = () => {
       {/* Botão */}
 
       <div className="px-2">
-        <NavLink to="/studentcontrolpanel">
-          <button className=" mb-4 w-full p-3  text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
-            Continuar
-          </button>
-        </NavLink>
+        <button
+          type="submit"
+          className=" mb-4 w-full p-3  text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">
+          Continuar
+        </button>
       </div>
     </form>
   );

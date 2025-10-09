@@ -114,6 +114,10 @@ const SignUpForm = () => {
       };
 
       await api.createAdmin(newAdmin);
+
+      //Auto-login qndo registra
+      await api.login(data.email, data.password);
+
       navigate("/admincontrolpanel");
     } catch (error) {
       console.error("Erro ao cadastrar aluno: ", error);

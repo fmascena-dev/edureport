@@ -97,6 +97,9 @@ const SignUpFormSchool = () => {
 
       await api.createSchool(newSchool);
 
+      //Auto-login qndo registra
+      await api.login(data.email, data.password);
+
       navigate("/schoolcontrolpanel");
     } catch (error) {
       console.error("Erro ao cadastrar escola: ", error);
