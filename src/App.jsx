@@ -18,30 +18,87 @@ import SchoolControlPanel from "./pages/SchoolControlPanel.jsx";
 import StudentControlPanel from "./pages/StudentControlPanel.jsx";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./Security/AuthProvider.jsx";
+import ProtectedRoute from "./Security/ProtectedRoute.jsx";
 
 const App = () => {
   return (
     <>
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signup-user" element={<SignUpUser />} />
-          <Route path="/signup-school" element={<SignUpSchool />} />
-          <Route path="/signup-admin" element={<SignUpAdmin />} />
-          <Route path="/seepubliccomplaints" element={<SeePublicComplaints />}/>
-          <Route path="/howitworks" element={<HowItWorksPage />} />
-          <Route path="/adminprofile" element={<AdminProfile />} />
-          <Route path="/schoolprofile" element={<SchoolProfile />} />
-          <Route path="/studentprofile" element={<StudentProfile />} />
-          <Route path="/complaintregister" element={<ComplaintRegister />} />
+        <AuthProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/signup-user" element={<SignUpUser />} />
+            <Route path="/signup-school" element={<SignUpSchool />} />
+            <Route path="/signup-admin" element={<SignUpAdmin />} />
+            <Route
+              path="/seepubliccomplaints"
+              element={<SeePublicComplaints />}
+            />
+            <Route path="/howitworks" element={<HowItWorksPage />} />
 
-          <Route path="/admincontrolpanel" element={<AdminControlPainel />} />
-          <Route path="/schoolcontrolpanel" element={<SchoolControlPanel />} />
-          <Route path="/studentcontrolpanel" element={<StudentControlPanel />} />
-        </Routes>
+            <Route
+              path="/adminprofile"
+              element={
+                <ProtectedRoute allowedUserTypes={["admin"]}>
+                  <AdminProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admincontrolpanel"
+              element={
+                <ProtectedRoute allowedUserTypes={["admin"]}>
+                  <AdminControlPainel />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/schoolprofile"
+              element={
+                <ProtectedRoute allowedUserTypes={["school"]}>
+                  <SchoolProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schoolcontrolpanel"
+              element={
+                <ProtectedRoute allowedUserTypes={["school"]}>
+                  <SchoolControlPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/studentprofile"
+              element={
+                <ProtectedRoute allowedUserTypes={["student"]}>
+                  <StudentProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/studentcontrolpanel"
+              element={
+                <ProtectedRoute allowedUserTypes={["student"]}>
+                  <StudentControlPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/complaintregister"
+              element={
+                <ProtectedRoute allowedUserTypes={["student"]}>
+                  <ComplaintRegister />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthProvider>
       </Router>
     </>
   );
