@@ -48,7 +48,7 @@ const Navbar = () => {
         {isAuthenticated() ? (
           <>
             <span className="text-gray-700 font-medium">
-              Olá, {user?.email?.split("@")[0]}
+              Olá, {user?.fullName}
             </span>
             <button
               onClick={handleLogout}
