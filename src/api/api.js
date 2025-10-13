@@ -140,6 +140,27 @@ export const api = {
     return res.data;
   },
 
+  signUpAdmin: async (adminData) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/signup/admin`, adminData);
+
+      // Save tokens from the response
+      const { accessToken, refreshToken, userId, userType, email, fullName } =
+        res.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
+
+      return res.data;
+    } catch (error) {
+      console.error(
+        "Erro ao cadastrar admin:",
+        error.response?.data || error.message
+      );
+      throw new Error(error.response?.data?.error || error.message);
+    }
+  },
+
   getSchoolByName: async (name) => {
     const { data } = await axiosInstance.get(
       `/schools/name/${encodeURIComponent(name)}`
