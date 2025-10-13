@@ -93,9 +93,6 @@ const SignUpFormSchool = () => {
       const response = await api.signUpSchool(payload);
       console.log("responsta do signup school:", response);
 
-      //Auto-login qndo registra
-      await api.login(data.email, data.password);
-
       navigate("/schoolcontrolpanel");
     } catch (error) {
       console.error("Erro ao cadastrar escola: ", error);

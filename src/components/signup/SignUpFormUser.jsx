@@ -147,12 +147,8 @@ const SignUpForm = () => {
         schoolId: selectedSchool.school_id,
       };
 
-      const response = await api.signUpStudent(payload);
+      const response = await api.signUpStudent2(payload);
       console.log("Signup response:", response);
-
-      localStorage.setItem("accessToken", response.accessToken);
-      localStorage.setItem("refreshToken", response.refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(response));
 
       navigate("/studentprofile");
     } catch (error) {

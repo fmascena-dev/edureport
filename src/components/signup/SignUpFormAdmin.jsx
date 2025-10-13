@@ -113,7 +113,6 @@ const SignUpForm = () => {
       console.log("Resposta do signup admin:", response);
 
       //Auto-login qndo registra
-      await api.login(data.email, data.password);
 
       navigate("/admincontrolpanel");
     } catch (error) {
