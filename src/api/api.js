@@ -114,19 +114,6 @@ export const api = {
     return accessToken;
   },
 
-  createUser: async (user) => {
-    const res = await axiosInstance.post("/users", user);
-    return res.data;
-  },
-  createSchool: async (school) => {
-    const res = await axiosInstance.post("/schools", school);
-    return res.data;
-  },
-  createStudent: async (student) => {
-    const res = await axiosInstance.post("/students", student);
-    return res.data;
-  },
-
   signUpStudent: async (payload) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/signup/student`, payload);
