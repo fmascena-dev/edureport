@@ -147,7 +147,7 @@ const SignUpForm = () => {
         schoolId: selectedSchool.school_id,
       };
 
-      const response = await api.signUpStudent2(payload);
+      const response = await api.signUpStudent(payload);
       console.log("Signup response:", response);
 
       navigate("/studentprofile");
