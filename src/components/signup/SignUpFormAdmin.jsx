@@ -97,31 +97,27 @@ const SignUpForm = () => {
   // Função chamada ao submeter o formulário
   const onSubmit = async (data) => {
     try {
-      const newUser = {
-        full_name: data.fullName,
-        social_name: data.socialName,
-        email: data.email,
-        password_hash: data.password,
-        birth_date: data.dateOfBirth.split("/").reverse().join("-"),
-        user_type: "admin",
-        address_state: data.state,
-        address_city: data.city,
-        address_neighborhood: data.neighborhood,
+      const payload = {
+        user: {
+          full_name: data.fullName,
+          social_name: data.socialName,
+          email: data.email,
+          password_hash: data.password,
+          birth_date: data.dateOfBirth.split("/").reverse().join("-"),
+          address_state: data.state,
+          address_city: data.city,
+          address_neighborhood: data.neighborhood,
+        },
       };
-      const createdUser = await api.createUser(newUser);
-      const newAdmin = {
-        user: { user_id: createdUser.user_id },
-      };
-
-      await api.createAdmin(newAdmin);
+      const response = await api.signUpAdmin(payload);
+      console.log("Resposta do signup admin:", response);
 
       //Auto-login qndo registra
-      await api.login(data.email, data.password);
 
       navigate("/admincontrolpanel");
     } catch (error) {
-      console.error("Erro ao cadastrar aluno: ", error);
-      alert("Erro ao cadastrar aluno. Ver console");
+      console.error("Erro ao cadastrar admin: ", error);
+      alert("Erro ao cadastrar admin. Ver console");
     }
   };
 
@@ -223,19 +219,6 @@ const SignUpForm = () => {
 
       {/* Botão de continuar */}
       <div className="px-2">
-        {/* Poderia enviar os dados pelo state do NavLink */}
-        {/* Exemplo comentado:
-            state={{
-              fullName: watch('fullName'),
-              socialName: watch('socialName'),
-              email: watch('email'),
-              birthDate: watch('birthDate'),
-              state: watch('state'),
-              city: watch('city'),
-              neighborhood: watch('neighborhood'),
-            }}
-          */}
-
         <button
           type="submit"
           className="mt-4 mb-8 w-full p-3 text-sm sm:text-base text-white font-semibold transition duration-200 hover:bg-green-700 bg-green-500 rounded-md">

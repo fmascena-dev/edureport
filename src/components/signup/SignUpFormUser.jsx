@@ -150,10 +150,6 @@ const SignUpForm = () => {
       const response = await api.signUpStudent(payload);
       console.log("Signup response:", response);
 
-      localStorage.setItem("accessToken", response.accessToken);
-      localStorage.setItem("refreshToken", response.refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(response));
-
       navigate("/studentprofile");
     } catch (error) {
       console.error("Erro ao cadastrar aluno: ", error);
