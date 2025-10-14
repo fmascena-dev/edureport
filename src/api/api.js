@@ -114,30 +114,67 @@ export const api = {
     return accessToken;
   },
 
-  createUser: async (user) => {
-    const res = await axiosInstance.post("/users", user);
-    return res.data;
-  },
-  createSchool: async (school) => {
-    const res = await axiosInstance.post("/schools", school);
-    return res.data;
-  },
-  createStudent: async (student) => {
-    const res = await axiosInstance.post("/students", student);
-    return res.data;
-  },
+  signUpStudent: async (payload) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/signup/student`, payload);
 
-  signUpStudent: async (studentData) => {
-    const res = await axios.post(
-      `${BASE_URL}/auth/signup/student`,
-      studentData
-    );
-    return res.data;
+      // eslint-disable-next-line no-unused-vars
+      const { accessToken, refreshToken, userId, userType, email, fullName } =
+        res.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
+
+      return res.data;
+    } catch (error) {
+      console.error(
+        "Erro ao cadastrar escola:",
+        error.response?.data || error.message
+      );
+      throw new Error(error.response?.data?.error || error.message);
+    }
   },
 
   signUpSchool: async (payload) => {
-    const res = await axios.post(`${BASE_URL}/schools/signup`, payload);
-    return res.data;
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/signup/school`, payload);
+
+      // eslint-disable-next-line no-unused-vars
+      const { accessToken, refreshToken, userId, userType, email, fullName } =
+        res.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
+
+      return res.data;
+    } catch (error) {
+      console.error(
+        "Erro ao cadastrar escola:",
+        error.response?.data || error.message
+      );
+      throw new Error(error.response?.data?.error || error.message);
+    }
+  },
+
+  signUpAdmin: async (adminData) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/signup/admin`, adminData);
+
+      // eslint-disable-next-line no-unused-vars
+      const { accessToken, refreshToken, userId, userType, email, fullName } =
+        res.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
+
+      return res.data;
+    } catch (error) {
+      console.error(
+        "Erro ao cadastrar admin:",
+        error.response?.data || error.message
+      );
+      throw new Error(error.response?.data?.error || error.message);
+    }
   },
 
   getSchoolByName: async (name) => {
