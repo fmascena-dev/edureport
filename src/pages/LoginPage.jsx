@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { api } from "../api/api";
 
+import { useAuth } from "../Security/AuthContext"; // ✅ usar o contexto
+
 // Componente funcional da página de login
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,13 +13,17 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const { login } = useAuth(); // ✅ obtém do contexto
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const response = await api.login(email, password);
+      // const response = await api.login(email, password);
+
+      const response = await login(email, password); // ✅ chama o contexto
 
       if (response.userType === "school") {
         navigate("/schoolcontrolpanel");
