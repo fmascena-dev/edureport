@@ -5,6 +5,7 @@ import { z } from "zod";
 import { api } from "../../api/api";
 import FormField from "./FormField";
 import SelectField from "./SelectField";
+import { useAuth } from "../../Security/AuthContext";
 
 // Zod validation schema
 const schema = z
@@ -74,6 +75,7 @@ const SignUpFormSchool = () => {
     resolver: zodResolver(schema),
   });
   const navigate = useNavigate();
+  const { refreshUserProfile } = useAuth();
 
   const onSubmit = async (data) => {
     try {
@@ -90,8 +92,8 @@ const SignUpFormSchool = () => {
         school_type: data.schoolType,
       };
 
-      const response = await api.signUpSchool(payload);
-      console.log("responsta do signup school:", response);
+      await api.signUpSchool(payload);
+      await refreshUserProfile();
 
       navigate("/schoolcontrolpanel");
     } catch (error) {

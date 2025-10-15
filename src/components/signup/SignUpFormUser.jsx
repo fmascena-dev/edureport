@@ -2,17 +2,11 @@
 import { Controller, useForm } from "react-hook-form";
 import { api } from "../../api/api";
 import AsyncSelect from "react-select/async";
-
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
-// Importa NavLink do react-router-dom para navegação entre páginas sem recarregar a página
-
-// Importa o zodResolver que integra o Zod com react-hook-form
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Importa o Zod para validação de esquema (schema validation)
 import { z } from "zod";
+import { useAuth } from "../../Security/AuthContext";
 
-// Importa os campos personalizados criados anteriormente
 import FormField from "./FormField";
 import SelectField from "./SelectField";
 import DateField from "./DateField";
@@ -98,7 +92,9 @@ const SignUpForm = () => {
     resolver: zodResolver(schema), // Integração com Zod
     defaultValues: { dateOfBirth: "" }, // Valor inicial vazio para data
   });
+
   const navigate = useNavigate();
+  const { refreshUserProfile } = useAuth();
 
   const loadSchoolOptions = async (inputValue) => {
     if (!inputValue || inputValue.length < 2) return [];
@@ -147,8 +143,9 @@ const SignUpForm = () => {
         schoolId: selectedSchool.school_id,
       };
 
-      const response = await api.signUpStudent(payload);
-      console.log("Signup response:", response);
+      await api.signUpStudent(payload);
+
+      await refreshUserProfile();
 
       navigate("/studentprofile");
     } catch (error) {

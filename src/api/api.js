@@ -71,11 +71,9 @@ export const api = {
       });
 
       //Salva os tokens
-      // eslint-disable-next-line no-unused-vars
-      const { accessToken, refreshToken, userId, userType } = res.data;
+      const { accessToken, refreshToken } = res.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
 
       return res.data;
     } catch (error) {
@@ -83,55 +81,49 @@ export const api = {
         "Erro ao fazer login:",
         error.response?.data || error.message
       );
-      throw new Error(error.response?.data.error || error.message);
+      throw new Error(error.response?.data?.error || "Login failed");
     }
   },
 
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("currentUser");
     } catch (error) {
       console.error("Error ao fazer logout", error);
+    } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("currentUser");
     }
   },
 
-  refreshToken: async () => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) {
-      throw new Error("No refresh token available");
-    }
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, {
-      refreshToken,
-    });
-    const { accessToken } = res.data;
-    localStorage.setItem("accessToken", accessToken);
-    return accessToken;
+  // user profile -pega informações do usuário-
+  getCurrentUserProfile: async () => {
+    const res = await axiosInstance.get("/profile/me");
+    return res.data;
+  },
+
+  // atualiza as informações do usuário -> vai poder mudar o q tiver permissão no back end, tipo endereço
+  updateCurrentUserProfile: async (updates) => {
+    const res = await axiosInstance.put("/profile/me", updates);
+    return res.data;
   },
 
   signUpStudent: async (payload) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/signup/student`, payload);
 
-      // eslint-disable-next-line no-unused-vars
-      const { accessToken, refreshToken, userId, userType, email, fullName } =
-        res.data;
+      const { accessToken, refreshToken } = res.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
 
       return res.data;
     } catch (error) {
       console.error(
-        "Erro ao cadastrar escola:",
+        "Erro ao cadastrar aluno:",
         error.response?.data || error.message
       );
-      throw new Error(error.response?.data?.error || error.message);
+      throw new Error(error.response?.data?.error || "Signup failed");
     }
   },
 
@@ -139,12 +131,9 @@ export const api = {
     try {
       const res = await axios.post(`${BASE_URL}/auth/signup/school`, payload);
 
-      // eslint-disable-next-line no-unused-vars
-      const { accessToken, refreshToken, userId, userType, email, fullName } =
-        res.data;
+      const { accessToken, refreshToken } = res.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
 
       return res.data;
     } catch (error) {
@@ -152,7 +141,7 @@ export const api = {
         "Erro ao cadastrar escola:",
         error.response?.data || error.message
       );
-      throw new Error(error.response?.data?.error || error.message);
+      throw new Error(error.response?.data?.error || "Sign up failed");
     }
   },
 
@@ -160,12 +149,9 @@ export const api = {
     try {
       const res = await axios.post(`${BASE_URL}/auth/signup/admin`, adminData);
 
-      // eslint-disable-next-line no-unused-vars
-      const { accessToken, refreshToken, userId, userType, email, fullName } =
-        res.data;
+      const { accessToken, refreshToken } = res.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
 
       return res.data;
     } catch (error) {
@@ -173,7 +159,7 @@ export const api = {
         "Erro ao cadastrar admin:",
         error.response?.data || error.message
       );
-      throw new Error(error.response?.data?.error || error.message);
+      throw new Error(error.response?.data?.error || "Signup failed");
     }
   },
 
@@ -182,9 +168,5 @@ export const api = {
       `/schools/name/${encodeURIComponent(name)}`
     );
     return { data };
-  },
-  createAdmin: async (admin) => {
-    const res = await axiosInstance.post("/admins", admin);
-    return res.data;
   },
 };
