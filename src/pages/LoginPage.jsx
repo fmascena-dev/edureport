@@ -63,10 +63,10 @@ const LoginPage = () => {
 
         <h1 className="text-2xl font-bold">Sua voz na Escola</h1>
 
-        <p className="mt-2 mb-5">Plataforma segura para denúncias escolares</p>
+        <p className="mt-2 mb-5">Plataforma segura para feedbacks escolares.</p>
 
         <ul className="text-left mt-2 space-y-2 text-sm">
-          <li>• Denúncias anônimas e seguras</li>
+          <li>• Feedbacks anônimos e seguros</li>
           <li>• Ambiente escolar mais seguro</li>
         </ul>
       </div>

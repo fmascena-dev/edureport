@@ -59,7 +59,7 @@ const HowItWorksSection = () => {
               - mb-4: margem inferior 16px
             */}
 
-            <h4 className="text-xl font-semibold text-gray-700 mb-2">1. Registre a Denúncia</h4>
+            <h4 className="text-xl font-semibold text-gray-700 mb-2">1. Registre um Feedback</h4>
             {/*
               Subtítulo do card
               - text-xl: fonte de 20px
@@ -68,7 +68,7 @@ const HowItWorksSection = () => {
               - mb-2: margem inferior 8px
             */}
 
-            <p className="text-gray-600">Descreva o problema em detalhes, anexando fotos ou vídeos se possível.</p>
+            <p className="text-gray-600">Descreva o problema em detalhes, anexando tags e fotos .</p>
             {/*
               Texto explicativo do card
               - text-gray-600: cinza claro
@@ -82,7 +82,7 @@ const HowItWorksSection = () => {
               <polyline points="17 2 12 7 7 2" />
             </svg>
             <h4 className="text-xl font-semibold text-gray-700 mb-2">2. Acompanhe o Status</h4>
-            <p className="text-gray-600">Receba atualizações sobre o andamento da sua denúncia, de forma transparente.</p>
+            <p className="text-gray-600">Receba atualizações sobre o andamento de seu feedback, de forma transparente.</p>
             {/*
               Card 2: acompanha o status da denúncia
               Ícone verde, título, texto explicativo

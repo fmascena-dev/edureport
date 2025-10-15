@@ -42,8 +42,7 @@ const HeroSection = () => {
         */}
 
         <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white">
-          Relate problemas, denuncie e acompanhe as respostas das autoridades de
-          forma anônima e segura.
+          Conte o que está dando certo e o que pode melhorar — registre problemas e elogios e receba retornos das autoridades com segurança e anonimato.
         </p>
         {/* 
           Parágrafo de apoio (subtítulo).
@@ -58,7 +57,7 @@ const HeroSection = () => {
             className="bg-green-500 text-white font-bold py-3 px-8 rounded-full 
                      text-lg shadow-xl hover:bg-green-600 transform hover:scale-105 
                      transition duration-300 ease-in-out cursor-pointer">
-            Denunciar um Problema
+            Enviar Feedback
           </button>
         </NavLink>
         {/* 

@@ -33,17 +33,22 @@ const Navbar = () => {
       </div>
 
       <div className="space-x-4">
+        
         <NavLink to="/howitworks">
           <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
             Como Funciona
           </button>
         </NavLink>
-
+        
+        {/*
+        // Poderá ser implementado futuramente
+        
         <NavLink to="/seepubliccomplaints">
           <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
             Ver Denúncias Públicas
           </button>
         </NavLink>
+        */}
 
         {isAuthenticated() ? (
           <>

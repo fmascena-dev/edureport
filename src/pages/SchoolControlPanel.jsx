@@ -30,7 +30,7 @@ const SchoolControlPainel = () => {
             </h1>
 
             <p className="text-center text-gray-700 text-lg mb-10">
-                Aqui você encontra os principais recursos para gerenciar sua instituição e acompanhar denúncias recebidas.
+                Aqui você encontra os principais recursos para gerenciar sua instituição e acompanhar seus feedbacks recebidos.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -41,12 +41,12 @@ const SchoolControlPainel = () => {
 
                 <a href="/schoolcomplaints" className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
                     <h2 className="text-red-600 font-bold text-xl mb-2">Suas Denúncias</h2>
-                    <p className="text-gray-600 text-sm">Acompanhe as denúncias recebidas e tome providências.</p>
+                    <p className="text-gray-600 text-sm">Acompanhe seus feedbacks recebidos e tome providências.</p>
                 </a>
             </div>
 
             <div className="mb-12">
-                <h3 className="text-center text-xl font-bold text-gray-800 mb-6">Denúncias Recebidas</h3>
+                <h3 className="text-center text-xl font-bold text-gray-800 mb-6">Feedbacks Recebidos</h3>
                 <div className="space-y-6">
                     {complaints.map((complaint, index) => (
                         <div key={index} className="bg-white rounded-lg shadow-md p-6">

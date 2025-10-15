@@ -52,7 +52,7 @@ const StatisticsSection = () => {
               - font-bold: negrito
               - text-blue-600: cor azul
             */}
-            <p className="text-gray-600 text-lg">Denúncias Registradas</p>
+            <p className="text-gray-600 text-lg">Feedbacks Registrados</p>
             {/*
               Descrição do número
               - text-gray-600: cinza médio
@@ -73,7 +73,7 @@ const StatisticsSection = () => {
           {/* Estatística 3 */}
           <div className="p-6">
             <p className="text-6xl font-bold text-yellow-500">324</p>
-            <p className="text-gray-600 text-lg">Problemas em Análise</p>
+            <p className="text-gray-600 text-lg">Feedbacks em Análise</p>
             {/*
               Número e descrição da terceira estatística
               - Número em amarelo
