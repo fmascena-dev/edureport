@@ -62,11 +62,11 @@ const StudentProfile = () => {
 
           {/* Botão para editar perfil */}
           <div className="mt-8 flex justify-center space-x-6">
-            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200">
+            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
               Editar Perfil
             </button>
             <NavLink to="/studentcontrolpanel">
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200">
+              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
                 Voltar ao Painel
               </button>
             </NavLink>
@@ -78,3 +78,4 @@ const StudentProfile = () => {
 };
 
 export default StudentProfile;
+
