@@ -18,7 +18,7 @@ import SchoolControlPanel from "./pages/SchoolControlPanel.jsx";
 import StudentControlPanel from "./pages/StudentControlPanel.jsx";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./Security/AuthProvider.jsx";
+import { AuthProvider } from "./Security/AuthContext.jsx";
 import ProtectedRoute from "./Security/ProtectedRoute.jsx";
 
 const App = () => {
