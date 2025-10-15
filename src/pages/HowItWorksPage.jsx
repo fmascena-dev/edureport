@@ -135,8 +135,8 @@ const HowItWorksPage = () => {
               </h4>
               <p className="text-gray-600">
                 Após o envio, você receberá um código para acompanhar o
-                andamento do Feedback. Todas as etapas — desde o recebimento até
-                a resolução — são atualizadas em tempo real, garantindo total
+                andamento do Feedback. Todas as etapas, desde o recebimento até
+                a resolução, são atualizadas em tempo real, garantindo total
                 transparência.
               </p>
             </div>

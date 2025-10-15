@@ -29,7 +29,7 @@ const StudentControlPainel = () => {
                 </a>
 
                 <a href="/complaintregister" className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
-                    <h2 className="text-green-700 font-bold text-xl mb-2">Criar Feedback</h2>
+                    <h2 className="text-green-700 font-bold text-xl mb-2">Enviar Feedback</h2>
                     <p className="text-gray-600 text-sm">Registre um novo feedback sobre ocorrências internas.</p>
                 </a>
             </div>

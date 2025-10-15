@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { NavLink, useLocation } from 'react-router-dom';
 // listas de tags
 const BadTags = [
   { value: "ESTRUTURA", label: "Estrutura ruim" },
@@ -118,7 +118,8 @@ const ComplaintRegister = () => {
                       isSelected
                         ? "bg-red-200 border-red-500"
                         : "border-red-400 hover:bg-red-50"
-                    }`}>
+                    }`}
+                  >
                     {tag.label}
                   </button>
                 );
@@ -142,7 +143,8 @@ const ComplaintRegister = () => {
                       isSelected
                         ? "bg-green-200 border-green-500"
                         : "border-green-400 hover:bg-green-50"
-                    }`}>
+                    }`}
+                  >
                     {tag.label}
                   </button>
                 );
@@ -151,12 +153,18 @@ const ComplaintRegister = () => {
           </div>
 
           {/* Botão para enviar */}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 gap-4">
             <button
               onClick={handleSubmit}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg">
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg cursor-pointer"
+            >
               Enviar Avaliação
             </button>
+            <NavLink to="/studentcontrolpanel">
+              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
+                Voltar ao Painel
+              </button>
+            </NavLink>
           </div>
         </div>
       </section>

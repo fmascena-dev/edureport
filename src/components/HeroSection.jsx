@@ -42,8 +42,10 @@ const HeroSection = () => {
         */}
 
         <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white">
-          Conte o que está dando certo e o que pode melhorar — registre problemas e elogios e receba retornos das autoridades com segurança e anonimato.
+          Sua voz é importante! Ajude a construir um ambiente melhor. <br/>
+           Conte o que está dando certo, aponte melhorias e compartilhe elogios ou problemas.
         </p>
+        
         {/* 
           Parágrafo de apoio (subtítulo).
           - text-lg md:text-xl: fonte de 18px e 20px em telas médias.
