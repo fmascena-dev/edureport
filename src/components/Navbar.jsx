@@ -11,6 +11,19 @@ const Navbar = () => {
     }
   };
 
+
+  function handleUser() {
+
+    if (user.userType === "school") {
+      return "/schoolcontrolpanel";
+    } else if (user.userType === "admin") {
+      return "/admincontrolpanel";
+    } else {
+      return "/studentcontrolpanel";
+    }
+
+  };
+
   return (
     <nav className="bg-white  p-4 flex justify-between items-center fixed w-full top-0 z-50 ">
       <div className="flex items-center space-x-2 cursor-pointer">
@@ -50,9 +63,11 @@ const Navbar = () => {
         </NavLink>
         */}
 
+        
+
         {isAuthenticated() ? (
           <>
-          <NavLink to="/studentcontrolpanel">
+          <NavLink to={handleUser()}>
             <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
               Olá, {user?.fullName}
               </button>

@@ -54,14 +54,18 @@ const HeroSection = () => {
           - mb-8: margem inferior (32px).
           - text-white: cor branca no texto.
         */}
-        <NavLink to="/complaintregister">
+        
+
+        {/* <NavLink to="/complaintregister">
           <button
             className="bg-green-500 text-white font-bold py-3 px-8 rounded-full 
                      text-lg shadow-xl hover:bg-green-600 transform hover:scale-105 
                      transition duration-300 ease-in-out cursor-pointer">
             Enviar Feedback
           </button>
-        </NavLink>
+        </NavLink> */}
+
+
         {/* 
           Botão de ação principal (CTA).
           - bg-green-500: fundo verde.
