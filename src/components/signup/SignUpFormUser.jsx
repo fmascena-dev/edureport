@@ -147,7 +147,7 @@ const SignUpForm = () => {
 
       await refreshUserProfile();
 
-      navigate("/studentprofile");
+      navigate("/studentcontrolpanel");
     } catch (error) {
       console.error("Erro ao cadastrar aluno: ", error);
       alert("Erro ao cadastrar aluno. Ver console");
