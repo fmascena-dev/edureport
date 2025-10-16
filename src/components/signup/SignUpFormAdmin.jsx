@@ -1,19 +1,12 @@
 // Importa o React para criar o componente
 import React from "react";
-
-// Importa o NavLink para navegação (react-router-dom)
 import { NavLink, useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
-// Importa hooks e utilitários do react-hook-form
 import { useForm } from "react-hook-form";
-
-// Importa o zodResolver que conecta react-hook-form com zod para validação
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Importa o zod para criar o schema de validação
 import { z } from "zod";
+import { useAuth } from "../../Security/AuthContext";
 
-// Importa os componentes customizados de campos
 import FormField from "./FormField";
 import SelectField from "./SelectField";
 import DateField from "./DateField";
@@ -93,6 +86,7 @@ const SignUpForm = () => {
     defaultValues: { dateOfBirth: "" }, // Valor inicial vazio para data
   });
   const navigate = useNavigate();
+  const { refreshUserProfile } = useAuth();
 
   // Função chamada ao submeter o formulário
   const onSubmit = async (data) => {
@@ -109,8 +103,9 @@ const SignUpForm = () => {
           address_neighborhood: data.neighborhood,
         },
       };
-      const response = await api.signUpAdmin(payload);
-      console.log("Resposta do signup admin:", response);
+
+      await api.signUpAdmin(payload);
+      await refreshUserProfile();
 
       //Auto-login qndo registra
 
