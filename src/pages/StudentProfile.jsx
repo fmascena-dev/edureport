@@ -1,15 +1,15 @@
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../Security/AuthContext";
+import { NavLink } from "react-router-dom"
+import { useAuth } from "../Security/AuthContext"
 
 const StudentProfile = () => {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   if (!user) {
     return (
       <section className="pt-28 text-center text-gray-700">
         <p>Carregando informações do estudante...</p>
       </section>
-    );
+    )
   }
 
   // Dados do backend
@@ -22,13 +22,19 @@ const StudentProfile = () => {
     addressCity,
     addressNeighborhood,
     school,
-  } = user;
+  } = user
+
+  const formatDateToBrazil = (dateString) => {
+    if (!dateString) return "Não informado"
+    const date = new Date(dateString)
+    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" })
+  }
 
   // Dados para exibição
-  const finalDateOfBirth = birthDate || "Não informado";
-  const finalState = addressState || "Não informado";
-  const finalCity = addressCity || "Não informado";
-  const finalNeighborhood = addressNeighborhood || "Não informado";
+  const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado"
+  const finalState = addressState || "Não informado"
+  const finalCity = addressCity || "Não informado"
+  const finalNeighborhood = addressNeighborhood || "Não informado"
 
   return (
     <section className="p-28 w-full max-w-4xl mx-auto px-4">
@@ -95,7 +101,7 @@ const StudentProfile = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default StudentProfile;
+export default StudentProfile
