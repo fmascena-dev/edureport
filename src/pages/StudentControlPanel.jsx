@@ -2,15 +2,13 @@
 import { useAuth } from "../Security/AuthContext";
 
 const StudentControlPainel = () => {
-    const studentName = "Nome Aluno" // Substitua pelo nome real do aluno
-    const schoolName = "Nome Escola" // Substitua pelo nome real da escola
-    const schoolemail = "aluno@email.com" // Substitua pelo email real do aluno
+
     const { user } = useAuth();
 
     return (
         <section className="pt-28 w-full max-w-6xl mx-auto px-6">
             <h1 className="text-center mb-4 text-blue-600 text-4xl font-bold">
-                Bem-vindo, <span>{user?.fullName || "user"}</span>!
+                Bem-vindo, <span>{user?.socialName || "user"}</span>!
             </h1>
 
             <p className="text-center text-gray-700 text-lg mb-10">
@@ -37,9 +35,12 @@ const StudentControlPainel = () => {
             <div className="bg-gray-100 rounded-lg p-6 shadow-inner">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Seus Dados</h3>
                 <ul className="text-gray-700 space-y-2">
-                    <li><strong>Nome do Aluno:</strong> {studentName}</li>
-                    <li><strong>Nome da Escola:</strong> {schoolName}</li>
-                    <li><strong>Email do Aluno:</strong> {schoolemail}</li>
+
+                    <li><strong>Nome do Aluno:</strong> {user?.fullName || "Não informado"}</li>
+                    <li><strong>Email do Aluno:</strong> {user?.email || "Não informado"}</li>
+                    <li>
+                        <strong>Nome da Escola:</strong> {user?.school?.schoolName || "Não informado"}
+                    </li>
                 </ul>
             </div>
         </section>
