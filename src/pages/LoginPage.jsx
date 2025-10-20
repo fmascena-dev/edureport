@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { api } from "../api/api";
 
 import { useAuth } from "../Security/AuthContext"; // ✅ usar o contexto
 
