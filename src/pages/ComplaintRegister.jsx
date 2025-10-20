@@ -1,60 +1,132 @@
-import React, { useState } from "react";
-import { NavLink, useLocation } from 'react-router-dom';
-// listas de tags
-const BadTags = [
-  { value: "ESTRUTURA", label: "Estrutura ruim" },
-  { value: "FALTA_PROF", label: "Falta de professores" },
-  { value: "MERENDA", label: "Merenda ruim" },
-  { value: "LAB_PRECARIO", label: "Laboratórios precários" },
-  { value: "SEGURANCA", label: "Falta de segurança" },
-  { value: "LIMPEZA", label: "Higiene/limpeza ruim" },
-  { value: "ACESSIBILIDADE", label: "Falta de acessibilidade" },
-  { value: "GESTAO", label: "Gestão/coordenação ruim" },
-  { value: "INFRA_INSUFICIENTE", label: "Infraestrutura insuficiente" },
-  { value: "BULLYING", label: "Casos de bullying" },
-];
-
-const GoodTags = [
-  { value: "PROFESSORES_BONS", label: "Professores bons" },
-  { value: "BOM_AMBIENTE", label: "Bom ambiente" },
-  { value: "MERENDA_BOA", label: "Merenda de qualidade" },
-  { value: "LAB_BONS", label: "Laboratórios bem equipados" },
-  { value: "SEGURANCA_OK", label: "Boa segurança" },
-  { value: "LIMPEZA_OK", label: "Escola limpa" },
-  { value: "ATIVIDADES", label: "Atividades extracurriculares" },
-  { value: "TECNOLOGIA", label: "Boa tecnologia" },
-];
+import React, { useState, useEffect, useCallback } from "react";
+import { NavLink } from "react-router-dom";
+import { api } from "../api/api";
+import { useAuth } from "../Security/AuthContext";
 
 const ComplaintRegister = () => {
+  const { user, loading: authLoading } = useAuth();
+  const [badTags, setBadTags] = useState([]);
+  const [goodTags, setGoodTags] = useState([]);
   const [selectedBad, setSelectedBad] = useState([]);
   const [selectedGood, setSelectedGood] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    const payload = {
-      schoolId: 123,
-      badTags: selectedBad.map((t) => t.value),
-      goodTags: selectedGood.map((t) => t.value),
-    };
-    console.log("Payload para backend:", payload);
-    alert("Tags enviadas! (veja o console)");
+  // Get student's school info
+  const schoolId = user?.school?.schoolId;
+  const schoolName = user?.school?.schoolName || "Sua Escola";
+
+  // Fetch tags for the student's school
+  const fetchSchoolTags = useCallback(async () => {
+    if (!schoolId) return;
+
+    try {
+      setIsLoading(true);
+      const [positiveTags, negativeTags] = await Promise.all([
+        api.getPositiveTagsBySchool(schoolId),
+        api.getNegativeTagsBySchool(schoolId),
+      ]);
+
+      setGoodTags(positiveTags);
+      setBadTags(negativeTags);
+    } catch (error) {
+      console.error("Error fetching school tags:", error);
+      alert("Erro ao carregar tags da escola. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [schoolId]);
+
+  useEffect(() => {
+    if (schoolId) {
+      fetchSchoolTags();
+    }
+  }, [schoolId, fetchSchoolTags]);
+
+  const handleSubmit = async () => {
+    if (!schoolId) {
+      alert("Erro: Estudante não está associado a uma escola.");
+      return;
+    }
+
+    if (selectedBad.length === 0 && selectedGood.length === 0) {
+      alert("Selecione pelo menos uma tag positiva ou negativa.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // Get all selected tag IDs (both positive and negative)
+      const allSelectedTagIds = [
+        ...selectedBad.map((tag) => tag.tag_id),
+        ...selectedGood.map((tag) => tag.tag_id),
+      ];
+
+      // Create feedback payload
+      const payload = {
+        schoolId: schoolId,
+        tagIds: allSelectedTagIds,
+        // The student ID will be handled by the backend from the authenticated user
+      };
+
+      // Submit feedback
+      await api.createFeedback(payload);
+
+      alert("Avaliação enviada com sucesso!");
+
+      // Clear selections
+      setSelectedBad([]);
+      setSelectedGood([]);
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      alert("Erro ao enviar avaliação. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // remover tag clicando nela do lado da imagem
+  // Toggle tag selection
   const toggleTag = (tag, type) => {
     if (type === "bad") {
       setSelectedBad((prev) =>
-        prev.some((t) => t.value === tag.value)
-          ? prev.filter((t) => t.value !== tag.value)
+        prev.some((t) => t.tag_id === tag.tag_id)
+          ? prev.filter((t) => t.tag_id !== tag.tag_id)
           : [...prev, tag]
       );
     } else {
       setSelectedGood((prev) =>
-        prev.some((t) => t.value === tag.value)
-          ? prev.filter((t) => t.value !== tag.value)
+        prev.some((t) => t.tag_id === tag.tag_id)
+          ? prev.filter((t) => t.tag_id !== tag.tag_id)
           : [...prev, tag]
       );
     }
   };
+
+  if (authLoading || isLoading) {
+    return (
+      <main className="pt-28 flex justify-center">
+        <div className="text-center">Carregando informações da escola...</div>
+      </main>
+    );
+  }
+
+  if (!schoolId) {
+    return (
+      <main className="pt-28 flex justify-center">
+        <div className="text-center text-red-600">
+          <h2 className="text-xl font-semibold mb-4">Erro</h2>
+          <p>Não foi possível carregar as informações da escola.</p>
+          <p className="mt-2">Verifique se você está associado a uma escola.</p>
+          <NavLink
+            to="/studentcontrolpanel"
+            className="text-blue-600 underline mt-4 inline-block">
+            Voltar ao Painel
+          </NavLink>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="pt-28 flex justify-center">
@@ -63,102 +135,152 @@ const ComplaintRegister = () => {
           Avaliar Escola
         </h1>
         <div className="bg-white shadow-lg rounded-lg overflow-hidden min-h-80 p-4">
-          <h2 className="text-center p-2 font-semibold">
-            Nome da Escola igual ao do cadastro do aluno aqui
+          <h2 className="text-center p-2 font-semibold text-xl">
+            {schoolName}
           </h2>
 
-          <div className="flex gap-8 px-2">
-            <figure className="flex items-center border border-red-300">
+          <div className="flex gap-8 px-2 mt-4">
+            <figure className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
               <img
-                src="null"
-                alt="Escola fulano de tal"
-                title="Escola fulano de tal"
+                src="/default-school-image.png" // You can replace this with actual school image
+                alt={schoolName}
+                title={schoolName}
                 width="300"
                 height="300"
+                className="object-cover"
               />
             </figure>
 
-            {/* tags selecionadas aparecem aqui */}
-            <div className="flex flex-col gap-2">
-              <h3>
-                sei la, da pra colocar as estatísticas do feedback q essa escola
-                teve
+            {/* Selected tags preview */}
+            <div className="flex flex-col gap-2 flex-1">
+              <h3 className="font-semibold text-gray-700">
+                Tags Selecionadas:
               </h3>
-              <p>
-                ou a imagem da escola pode ser landscape e opcupar toda essa
-                parte horizontal
-              </p>
-              <p>
-                tem q melhorar essas tags tb, qlquer coisa é só adicionar no
-                array q ta no inicio do código dessa página
-              </p>
-              <p>
-                talvez tb tirar o texto de "tags negativas" e "tags positivas" n
-                tenho ctz. Ou o texto "Avaliar Escola" lá em cima
-              </p>
+
+              {/* Selected Negative Tags */}
+              {selectedBad.length > 0 && (
+                <div>
+                  <h4 className="text-red-600 font-medium text-sm">
+                    Negativas:
+                  </h4>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {selectedBad.map((tag) => (
+                      <span
+                        key={tag.tag_id}
+                        className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
+                        {tag.tag_nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Selected Positive Tags */}
+              {selectedGood.length > 0 && (
+                <div>
+                  <h4 className="text-green-600 font-medium text-sm">
+                    Positivas:
+                  </h4>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {selectedGood.map((tag) => (
+                      <span
+                        key={tag.tag_id}
+                        className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                        {tag.tag_nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedBad.length === 0 && selectedGood.length === 0 && (
+                <p className="text-gray-500 text-sm">
+                  Selecione tags abaixo para avaliar sua escola.
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Lista das tags e interação */}
+          {/* Available tags for selection */}
           <div className="grid grid-cols-2 gap-4 mt-6">
+            {/* Negative Tags */}
             <div className="flex flex-col gap-2">
               <label className="font-medium text-gray-700">
-                Tags negativas
+                Tags Negativas
               </label>
 
-              {BadTags.map((tag) => {
-                const isSelected = selectedBad.some(
-                  (t) => t.value === tag.value
-                );
-                return (
-                  <button
-                    key={tag.value}
-                    onClick={() => toggleTag(tag, "bad")}
-                    className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
-                      isSelected
-                        ? "bg-red-200 border-red-500"
-                        : "border-red-400 hover:bg-red-50"
-                    }`}
-                  >
-                    {tag.label}
-                  </button>
-                );
-              })}
+              {badTags.length > 0 ? (
+                badTags.map((tag) => {
+                  const isSelected = selectedBad.some(
+                    (t) => t.tag_id === tag.tag_id
+                  );
+                  return (
+                    <button
+                      key={tag.tag_id}
+                      onClick={() => toggleTag(tag, "bad")}
+                      className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                        isSelected
+                          ? "bg-red-200 border-red-500"
+                          : "border-red-400 hover:bg-red-50"
+                      }`}>
+                      {tag.tag_nome}
+                    </button>
+                  );
+                })
+              ) : (
+                <p className="text-gray-500 text-sm">
+                  Nenhuma tag negativa disponível
+                </p>
+              )}
             </div>
 
+            {/* Positive Tags */}
             <div className="flex flex-col gap-2">
               <label className="font-medium text-gray-700">
-                Tags positivas
+                Tags Positivas
               </label>
 
-              {GoodTags.map((tag) => {
-                const isSelected = selectedGood.some(
-                  (t) => t.value === tag.value
-                );
-                return (
-                  <button
-                    key={tag.value}
-                    onClick={() => toggleTag(tag, "good")}
-                    className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
-                      isSelected
-                        ? "bg-green-200 border-green-500"
-                        : "border-green-400 hover:bg-green-50"
-                    }`}
-                  >
-                    {tag.label}
-                  </button>
-                );
-              })}
+              {goodTags.length > 0 ? (
+                goodTags.map((tag) => {
+                  const isSelected = selectedGood.some(
+                    (t) => t.tag_id === tag.tag_id
+                  );
+                  return (
+                    <button
+                      key={tag.tag_id}
+                      onClick={() => toggleTag(tag, "good")}
+                      className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                        isSelected
+                          ? "bg-green-200 border-green-500"
+                          : "border-green-400 hover:bg-green-50"
+                      }`}>
+                      {tag.tag_nome}
+                    </button>
+                  );
+                })
+              ) : (
+                <p className="text-gray-500 text-sm">
+                  Nenhuma tag positiva disponível
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Botão para enviar */}
+          {/* Submit Button */}
           <div className="flex justify-center mt-6 gap-4">
             <button
               onClick={handleSubmit}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg cursor-pointer"
-            >
-              Enviar Avaliação
+              disabled={
+                isSubmitting ||
+                (selectedBad.length === 0 && selectedGood.length === 0)
+              }
+              className={`font-semibold px-6 py-2 rounded-lg cursor-pointer ${
+                isSubmitting ||
+                (selectedBad.length === 0 && selectedGood.length === 0)
+                  ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}>
+              {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
             </button>
             <NavLink to="/studentcontrolpanel">
               <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">

@@ -169,4 +169,61 @@ export const api = {
     );
     return { data };
   },
+
+  getTagsBySchool: async (schoolId) => {
+    const res = await axiosInstance.get(`/tags/school/${schoolId}`);
+    return res.data;
+  },
+
+  getPositiveTagsBySchool: async (schoolId) => {
+    const res = await axiosInstance.get(`/tags/school/${schoolId}/positive`);
+    return res.data;
+  },
+
+  getNegativeTagsBySchool: async (schoolId) => {
+    const res = await axiosInstance.get(`/tags/school/${schoolId}/negative`);
+    return res.data;
+  },
+
+  createTag: async (schoolId, tagData) => {
+    const res = await axiosInstance.post(`/tags/school/${schoolId}`, tagData);
+    return res.data;
+  },
+
+  deleteTag: async (tagId) => {
+    await axiosInstance.delete(`/tags/${tagId}`);
+  },
+
+  //metodos de feedback da escola
+  getSchoolWithFeedback: async (schoolId) => {
+    const res = await axiosInstance.get(`/schools/${schoolId}/feedback`);
+    return res.data;
+  },
+
+  getAllSchoolsWithFeedback: async () => {
+    const res = await axiosInstance.get("/schools/feedback");
+    return res.data;
+  },
+
+  createFeedback: async (feedbackData) => {
+    const res = await axiosInstance.post("/feedback", feedbackData);
+    return res.data;
+  },
+
+  // Get feedback by student (if needed)
+  getFeedbackByStudent: async (studentId) => {
+    const res = await axiosInstance.get(`/feedback/student/${studentId}`);
+    return res.data;
+  },
+
+  // Get feedback by school (if needed)
+  getFeedbackBySchool: async (schoolId) => {
+    const res = await axiosInstance.get(`/feedback/school/${schoolId}`);
+    return res.data;
+  },
+  // Get current student's feedback
+  getMyFeedback: async () => {
+    const res = await axiosInstance.get("/feedback/my-feedback");
+    return res.data;
+  },
 };

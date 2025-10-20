@@ -12,6 +12,8 @@ import AdminProfile from "./pages/AdminProfile.jsx";
 import SchoolProfile from "./pages/SchoolProfile.jsx";
 import StudentProfile from "./pages/StudentProfile.jsx";
 import ComplaintRegister from "./pages/ComplaintRegister.jsx";
+import CreateFeedbackBySchool from "./pages/CreateFeedbackBySchool.jsx";
+import SchoolsWithFeedback from "./pages/SchoolsWithFeedback.jsx";
 
 import AdminControlPainel from "./pages/AdminControlPanel.jsx";
 import SchoolControlPanel from "./pages/SchoolControlPanel.jsx";
@@ -34,6 +36,7 @@ const App = () => {
             <Route path="/signup-user" element={<SignUpUser />} />
             <Route path="/signup-school" element={<SignUpSchool />} />
             <Route path="/signup-admin" element={<SignUpAdmin />} />
+            <Route path="/schoolsfeedback" element={<SchoolsWithFeedback />} />
             <Route
               path="/seepubliccomplaints"
               element={<SeePublicComplaints />}
@@ -70,6 +73,14 @@ const App = () => {
               element={
                 <ProtectedRoute allowedUserTypes={["school"]}>
                   <SchoolControlPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/createfeedback"
+              element={
+                <ProtectedRoute allowedUserTypes={["school"]}>
+                  <CreateFeedbackBySchool />
                 </ProtectedRoute>
               }
             />
