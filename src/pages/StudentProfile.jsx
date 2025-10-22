@@ -1,13 +1,81 @@
 // src/components/StudentProfile.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Security/AuthContext";
-import EditProfileForm from "../components/EditProfileForm";
+import { api } from "../api/api";
 
 const StudentProfile = () => {
-  const { user } = useAuth();
+  const { user, refreshUserProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    socialName: "",
+    addressState: "",
+    addressCity: "",
+    addressNeighborhood: "",
+  });
+  const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [activeField, setActiveField] = useState(null);
+
+  // Initialize form with current user data
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        socialName: user.socialName || "",
+        addressState: user.addressState || "",
+        addressCity: user.addressCity || "",
+        addressNeighborhood: user.addressNeighborhood || "",
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFocus = (fieldName) => {
+    setActiveField(fieldName);
+  };
+
+  const handleBlur = () => {
+    setActiveField(null);
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    setSaveMessage("");
+
+    try {
+      await api.updateCurrentUserProfile(formData);
+      await refreshUserProfile();
+      setIsEditing(false);
+      setSaveMessage("Perfil atualizado com sucesso!");
+      setTimeout(() => setSaveMessage(""), 3000);
+    } catch (err) {
+      setSaveMessage(err.message || "Erro ao atualizar perfil");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset form data to original user data
+    if (user) {
+      setFormData({
+        socialName: user.socialName || "",
+        addressState: user.addressState || "",
+        addressCity: user.addressCity || "",
+        addressNeighborhood: user.addressNeighborhood || "",
+      });
+    }
+    setIsEditing(false);
+    setSaveMessage("");
+    setActiveField(null);
+  };
 
   if (!user) {
     return (
@@ -17,16 +85,7 @@ const StudentProfile = () => {
     );
   }
 
-  const {
-    fullName,
-    socialName,
-    email,
-    birthDate,
-    addressState,
-    addressCity,
-    addressNeighborhood,
-    school,
-  } = user;
+  const { fullName, email, birthDate, school } = user;
 
   const formatDateToBrazil = (dateString) => {
     if (!dateString) return "Não informado";
@@ -35,94 +94,290 @@ const StudentProfile = () => {
   };
 
   const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado";
-  const finalState = addressState || "Não informado";
-  const finalCity = addressCity || "Não informado";
-  const finalNeighborhood = addressNeighborhood || "Não informado";
 
-  const handleSaveSuccess = () => {
-    setIsEditing(false);
-    setSaveMessage("Profile updated successfully!");
-    setTimeout(() => setSaveMessage(""), 3000);
-  };
+  // Styling variables for consistency
+  const inputBaseClasses =
+    "w-full mt-1 p-3 border-2 rounded-lg transition-all duration-200 ease-in-out font-medium";
+  const inputActiveClasses =
+    "border-blue-500 bg-blue-50 shadow-md shadow-blue-200 transform scale-[1.02]";
+  const inputInactiveClasses =
+    "border-gray-300 bg-white hover:border-gray-400 focus:border-blue-500 focus:bg-blue-50 focus:ring-2 focus:ring-blue-200";
+  const fieldBaseClasses = "p-4 rounded-lg transition-all duration-200";
+  const fieldEditingClasses = "bg-blue-50 border-2 border-blue-200 shadow-sm";
+  const fieldStaticClasses = "bg-gray-50";
 
   return (
     <section className="p-28 w-full max-w-4xl mx-auto px-4">
       {saveMessage && (
-        <div className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-          {saveMessage}
+        <div
+          className={`mb-6 px-4 py-3 rounded-lg border-2 ${
+            saveMessage.includes("Erro")
+              ? "bg-red-50 border-red-300 text-red-700 shadow-sm"
+              : "bg-green-50 border-green-300 text-green-700 shadow-sm"
+          }`}>
+          <div className="flex items-center">
+            {saveMessage.includes("Erro") ? (
+              <span className="text-red-500 mr-2">⚠️</span>
+            ) : (
+              <span className="text-green-500 mr-2">✓</span>
+            )}
+            {saveMessage}
+          </div>
         </div>
       )}
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-blue-600 h-40 relative flex items-center justify-center">
-          <div className="absolute left-12">
+      <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+        {/* Header with gradient background */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 h-40 relative flex items-center justify-center">
+          <div className="absolute left-12 transform transition-transform duration-300 hover:scale-105">
             <img
               src="/default-profile.png"
               alt="Foto de perfil"
-              className="w-24 h-24 rounded-full border-4 border-white object-cover"
+              className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
             />
           </div>
+          {isEditing && (
+            <div className="absolute right-6 top-6 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-300">
+              Modo Edição
+            </div>
+          )}
         </div>
 
-        {/* Conteúdo do perfil */}
-        <div className="pt-16 pb-8 px-6">
-          <h2 className="text-2xl font-bold text-gray-800">{fullName}</h2>
-          {socialName && (
-            <p className="text-sm text-gray-500 italic">({socialName})</p>
-          )}
-          <p className="mt-2 text-gray-600">{email}</p>
+        {/* Profile Content */}
+        <div className="pt-16 pb-8 px-8">
+          {/* Name and Social Name Section */}
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex-1">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                {fullName}
+              </h2>
 
-          {/* Informações adicionais */}
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left text-sm text-gray-700">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="font-semibold text-gray-800">
-                Data de Nascimento:
+              {isEditing ? (
+                <div
+                  className={`${fieldBaseClasses} ${fieldEditingClasses} max-w-md`}>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Nome Social:
+                    <span className="text-blue-600 ml-1 text-xs">
+                      (editável)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    name="socialName"
+                    value={formData.socialName}
+                    onChange={handleChange}
+                    onFocus={() => handleFocus("socialName")}
+                    onBlur={handleBlur}
+                    className={`${inputBaseClasses} ${
+                      activeField === "socialName"
+                        ? inputActiveClasses
+                        : inputInactiveClasses
+                    }`}
+                    placeholder="Digite seu nome social"
+                  />
+                </div>
+              ) : (
+                formData.socialName && (
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200 max-w-md">
+                    <span className="text-sm font-semibold text-gray-600">
+                      Nome Social:
+                    </span>
+                    <p className="text-lg text-gray-800 font-medium mt-1">
+                      {formData.socialName}
+                    </p>
+                  </div>
+                )
+              )}
+
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg inline-block">
+                <p className="text-gray-600">
+                  <span className="font-semibold">Email:</span> {email}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Information Grid */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Birth Date (read-only) */}
+            <div
+              className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200`}>
+              <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+                📅 Data de Nascimento
               </span>
-              <p className="mt-1 text-gray-600">{finalDateOfBirth}</p>
+              <p className="mt-2 text-gray-700 text-lg font-semibold">
+                {finalDateOfBirth}
+              </p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="font-semibold text-gray-800">Estado:</span>
-              <p className="mt-1 text-gray-600">{finalState}</p>
+
+            {/* State (editable) */}
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+                🗺️ Estado
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="addressState"
+                  value={formData.addressState}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus("addressState")}
+                  onBlur={handleBlur}
+                  className={`${inputBaseClasses} ${
+                    activeField === "addressState"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
+                  }`}
+                  placeholder="Ex: São Paulo"
+                />
+              ) : (
+                <p className="mt-2 text-gray-700 text-lg font-semibold">
+                  {formData.addressState || "Não informado"}
+                </p>
+              )}
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="font-semibold text-gray-800">Cidade:</span>
-              <p className="mt-1 text-gray-600">{finalCity}</p>
+
+            {/* City (editable) */}
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+                🏙️ Cidade
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="addressCity"
+                  value={formData.addressCity}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus("addressCity")}
+                  onBlur={handleBlur}
+                  className={`${inputBaseClasses} ${
+                    activeField === "addressCity"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
+                  }`}
+                  placeholder="Ex: Campinas"
+                />
+              ) : (
+                <p className="mt-2 text-gray-700 text-lg font-semibold">
+                  {formData.addressCity || "Não informado"}
+                </p>
+              )}
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="font-semibold text-gray-800">Bairro:</span>
-              <p className="mt-1 text-gray-600">{finalNeighborhood}</p>
+
+            {/* Neighborhood (editable) */}
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+                🏘️ Bairro
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="addressNeighborhood"
+                  value={formData.addressNeighborhood}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus("addressNeighborhood")}
+                  onBlur={handleBlur}
+                  className={`${inputBaseClasses} ${
+                    activeField === "addressNeighborhood"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
+                  }`}
+                  placeholder="Ex: Centro"
+                />
+              ) : (
+                <p className="mt-2 text-gray-700 text-lg font-semibold">
+                  {formData.addressNeighborhood || "Não informado"}
+                </p>
+              )}
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg col-span-1 sm:col-span-2">
-              <span className="font-semibold text-gray-800">Escola:</span>
-              <p className="mt-1 text-gray-600">
+
+            {/* School (read-only) */}
+            <div
+              className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200 col-span-1 sm:col-span-2`}>
+              <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+                🏫 Escola
+              </span>
+              <p className="mt-2 text-gray-700 text-lg font-semibold">
                 {school?.schoolName || "Não informado"}
               </p>
             </div>
           </div>
 
-          {/* Botões */}
-          <div className="mt-8 flex justify-center space-x-6">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
-              Editar Perfil
-            </button>
-            <NavLink to="/studentcontrolpanel">
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
-                Voltar ao Painel
-              </button>
-            </NavLink>
+          {/* Action Buttons */}
+          <div className="mt-12 flex justify-center space-x-6">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  disabled={loading}
+                  className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center">
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Salvando...
+                    </>
+                  ) : (
+                    "💾 Salvar Alterações"
+                  )}
+                </button>
+                <button
+                  onClick={handleCancel}
+                  disabled={loading}
+                  className="px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50">
+                  ❌ Cancelar
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                  ✏️ Editar Perfil
+                </button>
+                <NavLink to="/studentcontrolpanel">
+                  <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                    ← Voltar ao Painel
+                  </button>
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Edit Profile Modal */}
-      {isEditing && (
-        <EditProfileForm
-          onCancel={() => setIsEditing(false)}
-          onSave={handleSaveSuccess}
-        />
-      )}
     </section>
   );
 };
