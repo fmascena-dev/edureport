@@ -1,18 +1,22 @@
-import { NavLink } from "react-router-dom"
-import { useAuth } from "../Security/AuthContext"
+// src/components/StudentProfile.jsx
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../Security/AuthContext";
+import EditProfileForm from "../components/EditProfileForm";
 
 const StudentProfile = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   if (!user) {
     return (
       <section className="pt-28 text-center text-gray-700">
         <p>Carregando informações do estudante...</p>
       </section>
-    )
+    );
   }
 
-  // Dados do backend
   const {
     fullName,
     socialName,
@@ -22,25 +26,34 @@ const StudentProfile = () => {
     addressCity,
     addressNeighborhood,
     school,
-  } = user
+  } = user;
 
   const formatDateToBrazil = (dateString) => {
-    if (!dateString) return "Não informado"
-    const date = new Date(dateString)
-    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" })
-  }
+    if (!dateString) return "Não informado";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+  };
 
-  // Dados para exibição
-  const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado"
-  const finalState = addressState || "Não informado"
-  const finalCity = addressCity || "Não informado"
-  const finalNeighborhood = addressNeighborhood || "Não informado"
+  const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado";
+  const finalState = addressState || "Não informado";
+  const finalCity = addressCity || "Não informado";
+  const finalNeighborhood = addressNeighborhood || "Não informado";
+
+  const handleSaveSuccess = () => {
+    setIsEditing(false);
+    setSaveMessage("Profile updated successfully!");
+    setTimeout(() => setSaveMessage(""), 3000);
+  };
 
   return (
     <section className="p-28 w-full max-w-4xl mx-auto px-4">
+      {saveMessage && (
+        <div className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+          {saveMessage}
+        </div>
+      )}
 
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-
         <div className="bg-blue-600 h-40 relative flex items-center justify-center">
           <div className="absolute left-12">
             <img
@@ -89,7 +102,9 @@ const StudentProfile = () => {
 
           {/* Botões */}
           <div className="mt-8 flex justify-center space-x-6">
-            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
               Editar Perfil
             </button>
             <NavLink to="/studentcontrolpanel">
@@ -100,8 +115,16 @@ const StudentProfile = () => {
           </div>
         </div>
       </div>
-    </section>
-  )
-}
 
-export default StudentProfile
+      {/* Edit Profile Modal */}
+      {isEditing && (
+        <EditProfileForm
+          onCancel={() => setIsEditing(false)}
+          onSave={handleSaveSuccess}
+        />
+      )}
+    </section>
+  );
+};
+
+export default StudentProfile;
