@@ -11,9 +11,7 @@ const Navbar = () => {
     }
   };
 
-
   function handleUser() {
-
     if (user.userType === "school") {
       return "/schoolcontrolpanel";
     } else if (user.userType === "admin") {
@@ -21,8 +19,7 @@ const Navbar = () => {
     } else {
       return "/studentcontrolpanel";
     }
-
-  };
+  }
 
   return (
     <nav className="bg-white  p-4 flex justify-between items-center fixed w-full top-0 z-50 ">
@@ -46,13 +43,12 @@ const Navbar = () => {
       </div>
 
       <div className="space-x-4">
-        
         <NavLink to="/howitworks">
           <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
             Como Funciona
           </button>
         </NavLink>
-        
+
         {/*
         // Poderá ser implementado futuramente
 
@@ -63,17 +59,14 @@ const Navbar = () => {
         </NavLink>
         */}
 
-        
-
         {isAuthenticated() ? (
           <>
-          <NavLink to={handleUser()}>
-            <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
-              Olá, {user?.fullName}
+            <NavLink to={handleUser()}>
+              <button className="text-blue-600 font-semibold py-2 px-4 rounded-full border-2 border-blue-600 hover:bg-purple-50 transition duration-300 cursor-pointer">
+                Olá, {user?.fullName}
               </button>
-          </NavLink>
-          
-     
+            </NavLink>
+
             <button
               onClick={handleLogout}
               className="bg-red-600 border-2 border-red-600 text-white font-semibold py-2 px-4 rounded-full shadow hover:bg-red-500 transition duration-300 cursor-pointer">
