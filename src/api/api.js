@@ -221,6 +221,7 @@ export const api = {
     const res = await axiosInstance.get(`/feedback/school/${schoolId}`);
     return res.data;
   },
+
   // Get current student's feedback
   getMyFeedback: async () => {
     const res = await axiosInstance.get("/feedback/my-feedback");
