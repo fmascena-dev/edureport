@@ -17,7 +17,6 @@ const StudentProfile = () => {
   const [saveMessage, setSaveMessage] = useState("");
   const [activeField, setActiveField] = useState(null);
 
-  // Initialize form with current user data
   useEffect(() => {
     if (user) {
       setFormData({
@@ -37,18 +36,12 @@ const StudentProfile = () => {
     }));
   };
 
-  const handleFocus = (fieldName) => {
-    setActiveField(fieldName);
-  };
-
-  const handleBlur = () => {
-    setActiveField(null);
-  };
+  const handleFocus = (fieldName) => setActiveField(fieldName);
+  const handleBlur = () => setActiveField(null);
 
   const handleSave = async () => {
     setLoading(true);
     setSaveMessage("");
-
     try {
       await api.updateCurrentUserProfile(formData);
       await refreshUserProfile();
@@ -63,7 +56,6 @@ const StudentProfile = () => {
   };
 
   const handleCancel = () => {
-    // Reset form data to original user data
     if (user) {
       setFormData({
         socialName: user.socialName || "",
@@ -95,7 +87,7 @@ const StudentProfile = () => {
 
   const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado";
 
-  // Styling variables for consistency
+  // Styling variables
   const inputBaseClasses =
     "w-full mt-1 p-3 border-2 rounded-lg transition-all duration-200 ease-in-out font-medium";
   const inputActiveClasses =
@@ -107,7 +99,7 @@ const StudentProfile = () => {
   const fieldStaticClasses = "bg-gray-50";
 
   return (
-    <section className="p-28 w-full max-w-4xl mx-auto px-4">
+    <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28">
       {saveMessage && (
         <div
           className={`mb-6 px-4 py-3 rounded-lg border-2 ${
@@ -127,39 +119,37 @@ const StudentProfile = () => {
       )}
 
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
-        {/* Header with gradient background */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 h-40 relative flex items-center justify-center">
-          <div className="absolute left-12 transform transition-transform duration-300 hover:scale-105">
+        {/* Header */}
+        <div className="pt-4 bg-gradient-to-r from-blue-600 to-blue-700 h-32 sm:h-36 lg:h-40 relative flex items-center justify-center">
+          <div className="absolute left-6 sm:left-12 transform transition-transform duration-300 hover:scale-105">
             <img
               src="/default-profile.png"
               alt="Foto de perfil"
-              className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+              className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-lg object-cover"
             />
           </div>
           {isEditing && (
-            <div className="absolute right-6 top-6 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-300">
+            <div className="absolute right-4 sm:right-6 top-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-300">
               Modo Edição
             </div>
           )}
         </div>
 
         {/* Profile Content */}
-        <div className="pt-16 pb-8 px-8">
-          {/* Name and Social Name Section */}
-          <div className="flex justify-between items-start mb-6">
+        <div className="pt-16 pb-8 px-4 sm:px-8">
+          {/* Name and Social Name */}
+          <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
             <div className="flex-1">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
                 {fullName}
               </h2>
 
               {isEditing ? (
                 <div
-                  className={`${fieldBaseClasses} ${fieldEditingClasses} max-w-md`}>
+                  className={`${fieldBaseClasses} ${fieldEditingClasses} max-w-full sm:max-w-md`}>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Nome Social:
-                    <span className="text-blue-600 ml-1 text-xs">
-                      (editável)
-                    </span>
+                    <span className="text-blue-600 ml-1 text-xs">(editável)</span>
                   </label>
                   <input
                     type="text"
@@ -178,7 +168,7 @@ const StudentProfile = () => {
                 </div>
               ) : (
                 formData.socialName && (
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200 max-w-md">
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200 max-w-full sm:max-w-md">
                     <span className="text-sm font-semibold text-gray-600">
                       Nome Social:
                     </span>
@@ -198,8 +188,8 @@ const StudentProfile = () => {
           </div>
 
           {/* Information Grid */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Birth Date (read-only) */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            {/* Birth Date */}
             <div
               className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200`}>
               <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
@@ -210,7 +200,7 @@ const StudentProfile = () => {
               </p>
             </div>
 
-            {/* State (editable) */}
+            {/* State */}
             <div
               className={`${fieldBaseClasses} ${
                 isEditing ? fieldEditingClasses : fieldStaticClasses
@@ -243,7 +233,7 @@ const StudentProfile = () => {
               )}
             </div>
 
-            {/* City (editable) */}
+            {/* City */}
             <div
               className={`${fieldBaseClasses} ${
                 isEditing ? fieldEditingClasses : fieldStaticClasses
@@ -276,7 +266,7 @@ const StudentProfile = () => {
               )}
             </div>
 
-            {/* Neighborhood (editable) */}
+            {/* Neighborhood */}
             <div
               className={`${fieldBaseClasses} ${
                 isEditing ? fieldEditingClasses : fieldStaticClasses
@@ -309,7 +299,7 @@ const StudentProfile = () => {
               )}
             </div>
 
-            {/* School (read-only) */}
+            {/* School */}
             <div
               className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200 col-span-1 sm:col-span-2`}>
               <span className="font-bold text-gray-800 text-sm uppercase tracking-wide">
@@ -321,61 +311,66 @@ const StudentProfile = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-12 flex justify-center space-x-6">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center">
-                  {loading ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Salvando...
-                    </>
-                  ) : (
-                    "💾 Salvar Alterações"
-                  )}
-                </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={loading}
-                  className="px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50">
-                  ❌ Cancelar
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
-                  ✏️ Editar Perfil
-                </button>
-                <NavLink to="/studentcontrolpanel">
-                  <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
-                    ← Voltar ao Painel
-                  </button>
-                </NavLink>
-              </>
-            )}
-          </div>
+          <div className="mt-12 flex flex-col sm:flex-row justify-center items-center sm:space-x-6 space-y-4 sm:space-y-0">
+  {isEditing ? (
+    <>
+      <button
+        onClick={handleSave}
+        disabled={loading}
+        className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+      >
+        {loading ? (
+          <>
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Salvando...
+          </>
+        ) : (
+          "💾 Salvar Alterações"
+        )}
+      </button>
+      <button
+        onClick={handleCancel}
+        disabled={loading}
+        className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+      >
+        ❌ Cancelar
+      </button>
+    </>
+  ) : (
+    <>
+      <button
+        onClick={() => setIsEditing(true)}
+        className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center"
+      >
+        ✏️ Editar Perfil
+      </button>
+      <NavLink to="/studentcontrolpanel" className="w-full sm:w-auto">
+        <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center">
+          ← Voltar ao Painel
+        </button>
+      </NavLink>
+    </>
+  )}
+</div>
         </div>
       </div>
     </section>
