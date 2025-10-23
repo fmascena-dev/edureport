@@ -12,11 +12,9 @@ const ComplaintRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get student's school info
   const schoolId = user?.school?.schoolId;
   const schoolName = user?.school?.schoolName || "Sua Escola";
 
-  // Fetch tags for the student's school
   const fetchSchoolTags = useCallback(async () => {
     if (!schoolId) return;
 
@@ -26,7 +24,6 @@ const ComplaintRegister = () => {
         api.getPositiveTagsBySchool(schoolId),
         api.getNegativeTagsBySchool(schoolId),
       ]);
-
       setGoodTags(positiveTags);
       setBadTags(negativeTags);
     } catch (error) {
@@ -38,9 +35,7 @@ const ComplaintRegister = () => {
   }, [schoolId]);
 
   useEffect(() => {
-    if (schoolId) {
-      fetchSchoolTags();
-    }
+    if (schoolId) fetchSchoolTags();
   }, [schoolId, fetchSchoolTags]);
 
   const handleSubmit = async () => {
@@ -48,34 +43,19 @@ const ComplaintRegister = () => {
       alert("Erro: Estudante não está associado a uma escola.");
       return;
     }
-
     if (selectedBad.length === 0 && selectedGood.length === 0) {
       alert("Selecione pelo menos uma tag positiva ou negativa.");
       return;
     }
-
     try {
       setIsSubmitting(true);
-
-      // Get all selected tag IDs (both positive and negative)
       const allSelectedTagIds = [
         ...selectedBad.map((tag) => tag.tag_id),
         ...selectedGood.map((tag) => tag.tag_id),
       ];
-
-      // Create feedback payload
-      const payload = {
-        schoolId: schoolId,
-        tagIds: allSelectedTagIds,
-        // The student ID will be handled by the backend from the authenticated user
-      };
-
-      // Submit feedback
+      const payload = { schoolId, tagIds: allSelectedTagIds };
       await api.createFeedback(payload);
-
       alert("Avaliação enviada com sucesso!");
-
-      // Clear selections
       setSelectedBad([]);
       setSelectedGood([]);
     } catch (error) {
@@ -86,7 +66,6 @@ const ComplaintRegister = () => {
     }
   };
 
-  // Toggle tag selection
   const toggleTag = (tag, type) => {
     if (type === "bad") {
       setSelectedBad((prev) =>
@@ -120,7 +99,8 @@ const ComplaintRegister = () => {
           <p className="mt-2">Verifique se você está associado a uma escola.</p>
           <NavLink
             to="/studentcontrolpanel"
-            className="text-blue-600 underline mt-4 inline-block">
+            className="text-blue-600 underline mt-4 inline-block"
+          >
             Voltar ao Painel
           </NavLink>
         </div>
@@ -129,45 +109,37 @@ const ComplaintRegister = () => {
   }
 
   return (
-    <main className="pt-28 flex justify-center">
+    <main className="pt-28 flex justify-center px-2">
       <section className="w-full max-w-3xl mx-auto">
-        <h1 className="flex justify-center mb-6 text-blue-600 text-3xl font-bold">
+        <h1 className="flex justify-center mb-6 text-blue-600 text-2xl sm:text-3xl font-bold">
           Avaliar Escola
         </h1>
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden min-h-80 p-4">
-          <h2 className="text-center p-2 font-semibold text-xl">
-            {schoolName}
-          </h2>
 
-          <div className="flex gap-8 px-2 mt-4">
-            <figure className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
+          <h2 className="text-center p-2 font-semibold text-xl">{schoolName}</h2>
+
+          {/* Imagem e preview tags */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">
+            <figure className="flex items-center border border-gray-300 rounded-lg overflow-hidden md:w-1/3">
               <img
-                src="/default-school-image.png" // You can replace this with actual school image
+                src="/default-school-image.png"
                 alt={schoolName}
-                title={schoolName}
-                width="300"
-                height="300"
-                className="object-cover"
+                className="object-cover w-full h-48 md:h-64 lg:h-80"
               />
             </figure>
 
-            {/* Selected tags preview */}
             <div className="flex flex-col gap-2 flex-1">
-              <h3 className="font-semibold text-gray-700">
-                Tags Selecionadas:
-              </h3>
+              <h3 className="font-semibold text-gray-700">Tags Selecionadas:</h3>
 
-              {/* Selected Negative Tags */}
               {selectedBad.length > 0 && (
                 <div>
-                  <h4 className="text-red-600 font-medium text-sm">
-                    Negativas:
-                  </h4>
+                  <h4 className="text-red-600 font-medium text-sm">Negativas:</h4>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {selectedBad.map((tag) => (
                       <span
                         key={tag.tag_id}
-                        className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
+                        className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs sm:text-sm"
+                      >
                         {tag.tag_nome}
                       </span>
                     ))}
@@ -175,17 +147,15 @@ const ComplaintRegister = () => {
                 </div>
               )}
 
-              {/* Selected Positive Tags */}
               {selectedGood.length > 0 && (
                 <div>
-                  <h4 className="text-green-600 font-medium text-sm">
-                    Positivas:
-                  </h4>
+                  <h4 className="text-green-600 font-medium text-sm">Positivas:</h4>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {selectedGood.map((tag) => (
                       <span
                         key={tag.tag_id}
-                        className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                        className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs sm:text-sm"
+                      >
                         {tag.tag_nome}
                       </span>
                     ))}
@@ -194,100 +164,88 @@ const ComplaintRegister = () => {
               )}
 
               {selectedBad.length === 0 && selectedGood.length === 0 && (
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm sm:text-base">
                   Selecione tags abaixo para avaliar sua escola.
                 </p>
               )}
             </div>
           </div>
 
-          {/* Available tags for selection */}
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            {/* Negative Tags */}
+          {/* Tags disponíveis */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            {/* Negativas */}
             <div className="flex flex-col gap-2">
-              <label className="font-medium text-gray-700">
-                Tags Negativas
-              </label>
-
+              <label className="font-medium text-gray-700">Tags Negativas</label>
               {badTags.length > 0 ? (
                 badTags.map((tag) => {
-                  const isSelected = selectedBad.some(
-                    (t) => t.tag_id === tag.tag_id
-                  );
+                  const isSelected = selectedBad.some((t) => t.tag_id === tag.tag_id);
                   return (
                     <button
                       key={tag.tag_id}
                       onClick={() => toggleTag(tag, "bad")}
-                      className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${
                         isSelected
                           ? "bg-red-200 border-red-500"
                           : "border-red-400 hover:bg-red-50"
-                      }`}>
+                      }`}
+                    >
                       {tag.tag_nome}
                     </button>
                   );
                 })
               ) : (
-                <p className="text-gray-500 text-sm">
-                  Nenhuma tag negativa disponível
-                </p>
+                <p className="text-gray-500 text-sm">Nenhuma tag negativa disponível</p>
               )}
             </div>
 
-            {/* Positive Tags */}
+            {/* Positivas */}
             <div className="flex flex-col gap-2">
-              <label className="font-medium text-gray-700">
-                Tags Positivas
-              </label>
-
+              <label className="font-medium text-gray-700">Tags Positivas</label>
               {goodTags.length > 0 ? (
                 goodTags.map((tag) => {
-                  const isSelected = selectedGood.some(
-                    (t) => t.tag_id === tag.tag_id
-                  );
+                  const isSelected = selectedGood.some((t) => t.tag_id === tag.tag_id);
                   return (
                     <button
                       key={tag.tag_id}
                       onClick={() => toggleTag(tag, "good")}
-                      className={`px-2 py-1 rounded-full text-sm font-semibold cursor-pointer border ${
+                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${
                         isSelected
                           ? "bg-green-200 border-green-500"
                           : "border-green-400 hover:bg-green-50"
-                      }`}>
+                      }`}
+                    >
                       {tag.tag_nome}
                     </button>
                   );
                 })
               ) : (
-                <p className="text-gray-500 text-sm">
-                  Nenhuma tag positiva disponível
-                </p>
+                <p className="text-gray-500 text-sm">Nenhuma tag positiva disponível</p>
               )}
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-center mt-6 gap-4">
-            <button
-              onClick={handleSubmit}
-              disabled={
-                isSubmitting ||
-                (selectedBad.length === 0 && selectedGood.length === 0)
-              }
-              className={`font-semibold px-6 py-2 rounded-lg cursor-pointer ${
-                isSubmitting ||
-                (selectedBad.length === 0 && selectedGood.length === 0)
-                  ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}>
-              {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
-            </button>
-            <NavLink to="/studentcontrolpanel">
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
-                Voltar ao Painel
-              </button>
-            </NavLink>
-          </div>
+          {/* Botões */}
+<div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-4">
+  <button
+    onClick={handleSubmit}
+    disabled={
+      isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
+    }
+    className={`font-semibold px-6 py-2 w-full sm:w-48 rounded-lg cursor-pointer ${
+      isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
+        ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-700 text-white"
+    }`}
+  >
+    {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
+  </button>
+
+  <NavLink to="/studentcontrolpanel" className="w-full sm:w-48">
+    <button className="w-full px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
+      ← Voltar ao Painel
+    </button>
+  </NavLink>
+</div>
         </div>
       </section>
     </main>
