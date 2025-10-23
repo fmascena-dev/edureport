@@ -8,7 +8,7 @@ const StudentControlPainel = () => {
     return (
         <section className="pt-28 w-full max-w-6xl mx-auto px-6">
             <h1 className="text-center mb-4 text-blue-600 text-4xl font-bold">
-                Bem-vindo, <span>{user?.socialName || "Aluno"}</span>!
+                Bem-vindo, <span>{user?.socialName || "Aluno(a)"}</span>!
             </h1>
 
             <p className="text-center text-gray-700 text-lg mb-10">

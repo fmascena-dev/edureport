@@ -31,23 +31,27 @@ const SchoolProfile = () => {
   const finalNeighborhood = addressNeighborhood || "Não informado";
 
   return (
-    <section className="p-28 w-full max-w-4xl mx-auto px-4">
+    <section className="px-4 sm:px-8 md:px-16 lg:px-28 py-20 w-full max-w-4xl mx-auto">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Cabeçalho azul */}
-        <div className="bg-blue-600 h-40 relative flex items-center justify-center">
-          <div className="absolute left-12">
+        <div className="bg-blue-600 h-32 sm:h-40 relative flex items-center justify-center">
+          <div className="absolute left-6 sm:left-12">
             <img
               src="/default-profile.png"
               alt="Logo da escola"
-              className="w-24 h-24 rounded-full border-4 border-white object-cover"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white object-cover"
             />
           </div>
         </div>
 
         {/* Conteúdo do perfil */}
         <div className="pt-16 pb-8 px-6">
-          <h2 className="text-2xl font-bold text-gray-800">{finalSchoolName}</h2>
-          <p className="mt-2 text-gray-600">{finalEmail}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center sm:text-left">
+            {finalSchoolName}
+          </h2>
+          <p className="mt-2 text-gray-600 text-center sm:text-left">
+            {finalEmail}
+          </p>
 
           {/* Informações adicionais */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left text-sm text-gray-700">
@@ -69,14 +73,14 @@ const SchoolProfile = () => {
             </div>
           </div>
 
-          {/* Botões */}
-          <div className="mt-8 flex justify-center space-x-6">
-            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
+          {/* Botões responsivos */}
+          <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
+            <button className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer">
               Editar Perfil
             </button>
-            <NavLink to="/schoolcontrolpanel">
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
-                Voltar ao Painel
+            <NavLink to="/schoolcontrolpanel" className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
+                ← Voltar ao Painel
               </button>
             </NavLink>
           </div>
