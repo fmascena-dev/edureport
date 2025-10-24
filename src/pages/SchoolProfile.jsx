@@ -174,7 +174,7 @@ const SchoolProfile = () => {
                   placeholder="Ex: Pública, Estadual, Municipal..."
                 />
               ) : (
-                <p className="mt-2 text-gray-700 text-base sm:text-lg font-semibold break-words">
+                <p className="mt-2 text-gray-700 text-base sm:text-base font-semibold break-words">
                   {formData.schoolType || "Não informado"}
                 </p>
               )}
@@ -208,7 +208,7 @@ const SchoolProfile = () => {
                   placeholder="Ex: São Paulo"
                 />
               ) : (
-                <p className="mt-2 text-gray-700 text-base sm:text-lg font-semibold break-words">
+                <p className="mt-2 text-gray-700 text-base sm:text-base font-semibold break-words">
                   {formData.addressState || "Não informado"}
                 </p>
               )}
@@ -242,7 +242,7 @@ const SchoolProfile = () => {
                   placeholder="Ex: Campinas"
                 />
               ) : (
-                <p className="mt-2 text-gray-700 text-base sm:text-lg font-semibold break-words">
+                <p className="mt-2 text-gray-700 text-base sm:text-base font-semibold break-words">
                   {formData.addressCity || "Não informado"}
                 </p>
               )}
@@ -276,7 +276,7 @@ const SchoolProfile = () => {
                   placeholder="Ex: Centro"
                 />
               ) : (
-                <p className="mt-2 text-gray-700 text-base sm:text-lg font-semibold break-words">
+                <p className="mt-2 text-gray-700 text-base sm:text-base font-semibold break-words">
                   {formData.addressNeighborhood || "Não informado"}
                 </p>
               )}
