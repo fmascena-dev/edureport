@@ -1,7 +1,7 @@
 // src/api/api.js
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = "https://edureport-backend.onrender.com/api";
 
 // Cria o axios instance com interceptadores
 const axiosInstance = axios.create({
