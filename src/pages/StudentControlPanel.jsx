@@ -21,9 +21,9 @@ const StudentControlPainel = () => {
                     <p className="text-gray-600 text-sm">Veja e edite suas informações pessoais.</p>
                 </NavLink>
 
-                <NavLink to="/seestudentcomplaints" className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
+                <NavLink to="/registeredfeedbacks" className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
                     <h2 className="text-red-600 font-bold text-xl mb-2">Feedbacks</h2>
-                    <p className="text-gray-600 text-sm">Relate problemas ou situações preocupantes.</p>
+                    <p className="text-gray-600 text-sm">Veja os feedbacks registrados da sua escola</p>
                 </NavLink>
 
                 <NavLink to="/complaintregister" className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">

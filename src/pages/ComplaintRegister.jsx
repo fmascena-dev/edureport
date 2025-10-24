@@ -242,7 +242,7 @@ const ComplaintRegister = () => {
 
   <NavLink to="/studentcontrolpanel" className="w-full sm:w-48">
     <button className="w-full px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
-      ← Voltar ao Painel
+      Voltar ao Painel
     </button>
   </NavLink>
 </div>
