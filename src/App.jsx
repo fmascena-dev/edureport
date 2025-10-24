@@ -37,7 +37,15 @@ const App = () => {
             <Route path="/signup-user" element={<SignUpUser />} />
             <Route path="/signup-school" element={<SignUpSchool />} />
             <Route path="/signup-admin" element={<SignUpAdmin />} />
-            <Route path="/schoolsfeedback" element={<SchoolsWithFeedback />} />
+
+            <Route
+              path="/schoolsfeedback"
+              element={
+                <ProtectedRoute allowedUserTypes={["admin"]}>
+                  <SchoolsWithFeedback />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/seepubliccomplaints"
               element={<SeePublicComplaints />}

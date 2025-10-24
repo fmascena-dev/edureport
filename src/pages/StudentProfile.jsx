@@ -1,21 +1,21 @@
 // src/components/StudentProfile.jsx
-import { useState, useEffect } from "react"
-import { NavLink } from "react-router-dom"
-import { useAuth } from "../Security/AuthContext"
-import { api } from "../api/api"
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../Security/AuthContext";
+import { api } from "../api/api";
 
 const StudentProfile = () => {
-  const { user, refreshUserProfile } = useAuth()
-  const [isEditing, setIsEditing] = useState(false)
+  const { user, refreshUserProfile } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     socialName: "",
     addressState: "",
     addressCity: "",
     addressNeighborhood: "",
-  })
-  const [loading, setLoading] = useState(false)
-  const [saveMessage, setSaveMessage] = useState("")
-  const [activeField, setActiveField] = useState(null)
+  });
+  const [loading, setLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [activeField, setActiveField] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -24,36 +24,36 @@ const StudentProfile = () => {
         addressState: user.addressState || "",
         addressCity: user.addressCity || "",
         addressNeighborhood: user.addressNeighborhood || "",
-      })
+      });
     }
-  }, [user])
+  }, [user]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleFocus = (fieldName) => setActiveField(fieldName)
-  const handleBlur = () => setActiveField(null)
+  const handleFocus = (fieldName) => setActiveField(fieldName);
+  const handleBlur = () => setActiveField(null);
 
   const handleSave = async () => {
-    setLoading(true)
-    setSaveMessage("")
+    setLoading(true);
+    setSaveMessage("");
     try {
-      await api.updateCurrentUserProfile(formData)
-      await refreshUserProfile()
-      setIsEditing(false)
-      setSaveMessage("Perfil atualizado com sucesso!")
-      setTimeout(() => setSaveMessage(""), 3000)
+      await api.updateCurrentUserProfile(formData);
+      await refreshUserProfile();
+      setIsEditing(false);
+      setSaveMessage("Perfil atualizado com sucesso!");
+      setTimeout(() => setSaveMessage(""), 3000);
     } catch (err) {
-      setSaveMessage(err.message || "Erro ao atualizar perfil")
+      setSaveMessage(err.message || "Erro ao atualizar perfil");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleCancel = () => {
     if (user) {
@@ -62,40 +62,40 @@ const StudentProfile = () => {
         addressState: user.addressState || "",
         addressCity: user.addressCity || "",
         addressNeighborhood: user.addressNeighborhood || "",
-      })
+      });
     }
-    setIsEditing(false)
-    setSaveMessage("")
-    setActiveField(null)
-  }
+    setIsEditing(false);
+    setSaveMessage("");
+    setActiveField(null);
+  };
 
   if (!user) {
     return (
       <section className="pt-28 text-center text-gray-700">
         <p>Carregando informações do estudante...</p>
       </section>
-    )
+    );
   }
 
-  const { fullName, email, birthDate, school } = user
+  const { fullName, email, birthDate, school } = user;
 
   const formatDateToBrazil = (dateString) => {
-    if (!dateString) return "Não informado"
-    const date = new Date(dateString)
-    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" })
-  }
+    if (!dateString) return "Não informado";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+  };
 
-  const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado"
+  const finalDateOfBirth = formatDateToBrazil(birthDate) || "Não informado";
 
   const inputBaseClasses =
-    "w-full mt-1 p-3 border-2 rounded-lg transition-all duration-200 ease-in-out font-medium"
+    "w-full mt-1 p-3 border-2 rounded-lg transition-all duration-200 ease-in-out font-medium";
   const inputActiveClasses =
-    "border-blue-500 bg-blue-50 focus:ring-2 focus:ring-blue-200"
+    "border-blue-500 bg-blue-50 focus:ring-2 focus:ring-blue-200";
   const inputInactiveClasses =
-    "border-gray-300 bg-white hover:border-gray-400 focus:border-blue-500 focus:bg-blue-50 focus:ring-2 focus:ring-blue-200"
-  const fieldBaseClasses = "p-4 rounded-lg transition-all duration-200"
-  const fieldEditingClasses = "bg-blue-50 border-2 border-blue-200"
-  const fieldStaticClasses = "bg-gray-50"
+    "border-gray-300 bg-white hover:border-gray-400 focus:border-blue-500 focus:bg-blue-50 focus:ring-2 focus:ring-blue-200";
+  const fieldBaseClasses = "p-4 rounded-lg transition-all duration-200";
+  const fieldEditingClasses = "bg-blue-50 border-2 border-blue-200";
+  const fieldStaticClasses = "bg-gray-50";
 
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28">
@@ -105,8 +105,7 @@ const StudentProfile = () => {
             saveMessage.includes("Erro")
               ? "bg-red-50 border-red-300 text-red-700 shadow-sm"
               : "bg-green-50 border-green-300 text-green-700 shadow-sm"
-          }`}
-        >
+          }`}>
           <div className="flex items-center text-sm sm:text-base">
             {saveMessage.includes("Erro") ? (
               <span className="text-red-500 mr-2">⚠️</span>
@@ -151,7 +150,8 @@ const StudentProfile = () => {
 
           {/* Nome Social */}
           {isEditing ? (
-            <div className={`${fieldBaseClasses} ${fieldEditingClasses} border mb-8`}>
+            <div
+              className={`${fieldBaseClasses} ${fieldEditingClasses} border mb-8`}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Nome Social:
                 <span className="text-blue-600 ml-1 text-xs">(editável)</span>
@@ -187,7 +187,8 @@ const StudentProfile = () => {
           {/* Campos */}
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Data de nascimento */}
-            <div className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200`}>
+            <div
+              className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200`}>
               <span className="text-sm font-semibold text-gray-700">
                 Data de Nascimento
               </span>
@@ -197,10 +198,15 @@ const StudentProfile = () => {
             </div>
 
             {/* Estado */}
-            <div className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses} border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Estado
-                {isEditing && <span className="text-blue-600 ml-1 text-xs">(editável)</span>}
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
               </span>
               {isEditing ? (
                 <input
@@ -211,7 +217,9 @@ const StudentProfile = () => {
                   onFocus={() => handleFocus("addressState")}
                   onBlur={handleBlur}
                   className={`${inputBaseClasses} ${
-                    activeField === "addressState" ? inputActiveClasses : inputInactiveClasses
+                    activeField === "addressState"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
                   }`}
                   placeholder="Ex: São Paulo"
                 />
@@ -223,10 +231,15 @@ const StudentProfile = () => {
             </div>
 
             {/* Cidade */}
-            <div className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses} border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Cidade
-                {isEditing && <span className="text-blue-600 ml-1 text-xs">(editável)</span>}
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
               </span>
               {isEditing ? (
                 <input
@@ -237,7 +250,9 @@ const StudentProfile = () => {
                   onFocus={() => handleFocus("addressCity")}
                   onBlur={handleBlur}
                   className={`${inputBaseClasses} ${
-                    activeField === "addressCity" ? inputActiveClasses : inputInactiveClasses
+                    activeField === "addressCity"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
                   }`}
                   placeholder="Ex: Campinas"
                 />
@@ -249,10 +264,15 @@ const StudentProfile = () => {
             </div>
 
             {/* Bairro */}
-            <div className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses} border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+            <div
+              className={`${fieldBaseClasses} ${
+                isEditing ? fieldEditingClasses : fieldStaticClasses
+              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Bairro
-                {isEditing && <span className="text-blue-600 ml-1 text-xs">(editável)</span>}
+                {isEditing && (
+                  <span className="text-blue-600 ml-1 text-xs">(editável)</span>
+                )}
               </span>
               {isEditing ? (
                 <input
@@ -263,7 +283,9 @@ const StudentProfile = () => {
                   onFocus={() => handleFocus("addressNeighborhood")}
                   onBlur={handleBlur}
                   className={`${inputBaseClasses} ${
-                    activeField === "addressNeighborhood" ? inputActiveClasses : inputInactiveClasses
+                    activeField === "addressNeighborhood"
+                      ? inputActiveClasses
+                      : inputInactiveClasses
                   }`}
                   placeholder="Ex: Centro"
                 />
@@ -275,7 +297,8 @@ const StudentProfile = () => {
             </div>
 
             {/* Escola */}
-            <div className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200 col-span-1 sm:col-span-2`}>
+            <div
+              className={`${fieldBaseClasses} ${fieldStaticClasses} border border-gray-200 col-span-1 sm:col-span-2`}>
               <span className="text-sm font-semibold text-gray-700">
                 Escola
               </span>
@@ -292,15 +315,13 @@ const StudentProfile = () => {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
                   {loading ? "Salvando..." : "Salvar Alterações"}
                 </button>
                 <button
                   onClick={handleCancel}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl">
                   Cancelar
                 </button>
               </>
@@ -308,8 +329,7 @@ const StudentProfile = () => {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
-                >
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center">
                   Editar Perfil
                 </button>
                 <NavLink to="/studentcontrolpanel" className="w-full sm:w-auto">
@@ -323,7 +343,7 @@ const StudentProfile = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default StudentProfile
+export default StudentProfile;
