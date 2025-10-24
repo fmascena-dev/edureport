@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const SchoolControlPainel = () => {
   const [user, setUser] = useState(null);
@@ -73,25 +73,23 @@ const SchoolControlPainel = () => {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <a
-          href="/schoolprofile"
+        <NavLink to="/schoolprofile"
           className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
           <h2 className="text-blue-600 font-bold text-xl mb-2">Seu Perfil</h2>
           <p className="text-gray-600 text-sm">
             Edite as informações da escola e mantenha tudo atualizado.
           </p>
-        </a>
+        </NavLink>
 
-        <a
-          href="/createfeedback"
+        <NavLink to="/createfeedback"
           className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
           <h2 className="text-red-600 font-bold text-xl mb-2">
-            Suas Denúncias
+            Tags de feedback
           </h2>
           <p className="text-gray-600 text-sm">
-            Acompanhe seus feedbacks recebidos e tome providências.
+            Adicione ou remova tags para categorizar os feedbacks recebidos.
           </p>
-        </a>
+        </NavLink>
       </div>
 
       <div className="bg-gray-100 rounded-lg p-6 shadow-inner mb-12">
