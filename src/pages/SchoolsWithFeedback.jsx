@@ -8,7 +8,7 @@ const SchoolsWithFeedback = () => {
   const fetchSchoolsWithFeedback = async () => {
     try {
       setIsLoading(true);
-      const data = await api.getAllSchoolsWithFeedback();
+      const data = await api.getAllSchoolsWithFeedbackAdmin(); // Use the correct endpoint
       setSchoolsWithFeedback(data);
     } catch (error) {
       console.error("Error fetching schools with feedback:", error);
@@ -50,7 +50,7 @@ const SchoolsWithFeedback = () => {
               </p>
 
               <div className="grid grid-cols-2 gap-4">
-                {/* Positive Tags */}
+                {/* Positive Tags with Count */}
                 <div>
                   <h3 className="text-green-600 font-semibold mb-2">
                     Pontos Positivos
@@ -60,9 +60,9 @@ const SchoolsWithFeedback = () => {
                     schoolFeedback.positiveTags.length > 0 ? (
                       schoolFeedback.positiveTags.map((tag) => (
                         <span
-                          key={tag.tag_id}
-                          className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                          {tag.tag_nome}
+                          key={tag.tagId}
+                          className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                          {tag.tagName} ({tag.usageCount})
                         </span>
                       ))
                     ) : (
@@ -73,7 +73,7 @@ const SchoolsWithFeedback = () => {
                   </div>
                 </div>
 
-                {/* Negative Tags */}
+                {/* Negative Tags with Count */}
                 <div>
                   <h3 className="text-red-500 font-semibold mb-2">
                     Pontos Negativos
@@ -83,9 +83,9 @@ const SchoolsWithFeedback = () => {
                     schoolFeedback.negativeTags.length > 0 ? (
                       schoolFeedback.negativeTags.map((tag) => (
                         <span
-                          key={tag.tag_id}
-                          className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">
-                          {tag.tag_nome}
+                          key={tag.tagId}
+                          className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+                          {tag.tagName} ({tag.usageCount})
                         </span>
                       ))
                     ) : (
