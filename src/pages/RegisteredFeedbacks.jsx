@@ -7,6 +7,8 @@ export default function RegisteredFeedbacks() {
   const [feedbacks, setFeedbacks] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState("")
+  const schoolInitial = user?.school?.schoolName?.charAt(0).toUpperCase() || "?"
+
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -50,7 +52,7 @@ export default function RegisteredFeedbacks() {
   }
 
   return (
-    <section className="pt-28 w-full max-w-6xl mx-auto px-6">
+    <section className="pt-28 w-full max-w-5xl mx-auto px-6">
       <h1 className="text-center mb-4 text-blue-600 text-4xl font-bold">
         Feedbacks Registrados
       </h1>
@@ -76,11 +78,10 @@ export default function RegisteredFeedbacks() {
               className="flex flex-col md:flex-row items-start bg-white shadow rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-200"
             >
               <div className="flex-shrink-0">
-                <img
-                  src={"/school-default.png"}
-                  alt={user.school.schoolName}
-                  className="h-16 w-16 rounded-full object-cover"
-                />
+                <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl border border-blue-300">
+                  {schoolInitial}
+                </div>
+
               </div>
 
               <div className="mt-4 md:mt-0 md:ml-6 flex-1">
@@ -95,19 +96,32 @@ export default function RegisteredFeedbacks() {
 
                 {/* Tags associadas */}
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {item.tags?.map((tag) => (
-                    <span
-                      key={tag.tag_id}
-                      className={`text-xs font-medium px-2 py-1 rounded ${tag.tag_nome?.startsWith("Falta") ||
-                        tag.tag_nome?.startsWith("Problema") ||
-                        tag.type === "NEGATIVE"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-green-100 text-green-800"
-                        }`}
-                    >
-                      {tag.tag_nome}
-                    </span>
-                  ))}
+                  {item.tags?.map((tag) => {
+                    const type = tag.type?.toUpperCase()
+
+                    let tagStyle = "bg-gray-100 text-gray-800 border border-gray-300"
+                    let icon = "ℹ️"
+
+                    if (type === "NEGATIVE") {
+                      tagStyle = "bg-red-100 text-red-700 border border-red-300"
+                      icon = "❌"
+                    } else if (type === "POSITIVE") {
+                      tagStyle = "bg-green-100 text-green-700 border border-green-300"
+                      icon = "✅"
+                    } else if (type === "NEUTRAL") {
+                      tagStyle = "bg-yellow-100 text-yellow-700 border border-yellow-300"
+                      icon = "⚠️"
+                    }
+
+                    return (
+                      <span
+                        key={tag.tag_id}
+                        className={`inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full ${tagStyle}`}
+                      >
+                        {icon} {tag.tag_nome}
+                      </span>
+                    )
+                  })}
                 </div>
               </div>
             </div>

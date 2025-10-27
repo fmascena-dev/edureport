@@ -14,6 +14,8 @@ const ComplaintRegister = () => {
 
   const schoolId = user?.school?.schoolId;
   const schoolName = user?.school?.schoolName || "Sua Escola";
+  const schoolInitial = user?.school?.schoolName?.charAt(0).toUpperCase() || "?"
+
 
   const fetchSchoolTags = useCallback(async () => {
     if (!schoolId) return;
@@ -120,25 +122,26 @@ const ComplaintRegister = () => {
 
           {/* Imagem e preview tags */}
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">
-            <figure className="flex items-center border border-gray-300 rounded-lg overflow-hidden md:w-1/3">
-              <img
-                src="/default-school-image.png"
-                alt={schoolName}
-                className="object-cover w-full h-48 md:h-64 lg:h-80"
-              />
-            </figure>
 
-            <div className="flex flex-col gap-2 flex-1">
-              <h3 className="font-semibold text-gray-700">Tags Selecionadas:</h3>
+            {/* Avatar com inicial da escola */}
+            <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl border border-blue-300 shadow-sm transition duration-200">
+              {schoolInitial}
+            </div>
+
+            {/* Seção de tags selecionadas */}
+            <div className="flex flex-col gap-3 flex-1">
+              <h3 className="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                Tags Selecionadas
+              </h3>
 
               {selectedBad.length > 0 && (
-                <div>
-                  <h4 className="text-red-600 font-medium text-sm">Negativas:</h4>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <h4 className="text-red-700 font-semibold text-sm mb-2">❌ Negativas</h4>
+                  <div className="flex flex-wrap gap-2">
                     {selectedBad.map((tag) => (
                       <span
                         key={tag.tag_id}
-                        className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs sm:text-sm"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 border border-red-300 rounded-full text-xs sm:text-sm font-medium"
                       >
                         {tag.tag_nome}
                       </span>
@@ -148,19 +151,25 @@ const ComplaintRegister = () => {
               )}
 
               {selectedGood.length > 0 && (
-                <div>
-                  <h4 className="text-green-600 font-medium text-sm">Positivas:</h4>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <h4 className="text-green-700 font-semibold text-sm mb-2">✅ Positivas</h4>
+                  <div className="flex flex-wrap gap-2">
                     {selectedGood.map((tag) => (
                       <span
                         key={tag.tag_id}
-                        className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs sm:text-sm"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 border border-green-300 rounded-full text-xs sm:text-sm font-medium"
                       >
                         {tag.tag_nome}
                       </span>
                     ))}
                   </div>
                 </div>
+              )}
+
+              {selectedBad.length === 0 && selectedGood.length === 0 && (
+                <p className="text-gray-500 text-sm sm:text-base italic">
+                  Selecione tags abaixo para avaliar sua escola.
+                </p>
               )}
 
               {selectedBad.length === 0 && selectedGood.length === 0 && (
@@ -183,11 +192,10 @@ const ComplaintRegister = () => {
                     <button
                       key={tag.tag_id}
                       onClick={() => toggleTag(tag, "bad")}
-                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${
-                        isSelected
-                          ? "bg-red-200 border-red-500"
-                          : "border-red-400 hover:bg-red-50"
-                      }`}
+                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${isSelected
+                        ? "bg-red-200 border-red-500"
+                        : "border-red-400 hover:bg-red-50"
+                        }`}
                     >
                       {tag.tag_nome}
                     </button>
@@ -208,11 +216,10 @@ const ComplaintRegister = () => {
                     <button
                       key={tag.tag_id}
                       onClick={() => toggleTag(tag, "good")}
-                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${
-                        isSelected
-                          ? "bg-green-200 border-green-500"
-                          : "border-green-400 hover:bg-green-50"
-                      }`}
+                      className={`px-2 py-1 rounded-full text-sm sm:text-base font-semibold cursor-pointer border ${isSelected
+                        ? "bg-green-200 border-green-500"
+                        : "border-green-400 hover:bg-green-50"
+                        }`}
                     >
                       {tag.tag_nome}
                     </button>
@@ -225,27 +232,26 @@ const ComplaintRegister = () => {
           </div>
 
           {/* Botões */}
-<div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-4">
-  <button
-    onClick={handleSubmit}
-    disabled={
-      isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
-    }
-    className={`font-semibold px-6 py-2 w-full sm:w-48 rounded-lg cursor-pointer ${
-      isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
-        ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-        : "bg-blue-600 hover:bg-blue-700 text-white"
-    }`}
-  >
-    {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
-  </button>
+          <div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-4">
+            <button
+              onClick={handleSubmit}
+              disabled={
+                isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
+              }
+              className={`font-semibold px-6 py-2 w-full sm:w-48 rounded-lg cursor-pointer ${isSubmitting || (selectedBad.length === 0 && selectedGood.length === 0)
+                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
+            >
+              {isSubmitting ? "Enviando..." : "Enviar Avaliação"}
+            </button>
 
-  <NavLink to="/studentcontrolpanel" className="w-full sm:w-48">
-    <button className="w-full px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
-      Voltar ao Painel
-    </button>
-  </NavLink>
-</div>
+            <NavLink to="/studentcontrolpanel" className="w-full sm:w-48">
+              <button className="w-full px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer">
+                Voltar ao Painel
+              </button>
+            </NavLink>
+          </div>
         </div>
       </section>
     </main>
