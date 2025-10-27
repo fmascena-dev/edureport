@@ -86,12 +86,13 @@ const SchoolProfile = () => {
     "border-blue-500 bg-blue-50 shadow-md shadow-blue-200 transform scale-[1.02]"
   const inputInactiveClasses =
     "border-gray-300 bg-white hover:border-gray-400 focus:border-blue-500 focus:bg-blue-50 focus:ring-2 focus:ring-blue-200"
-  const fieldBaseClasses = "p-4 sm:p-5 rounded-lg transition-all duration-200"
+  const fieldBaseClasses = "p-4 rounded-lg transition-all duration-200"
   const fieldEditingClasses = "bg-blue-50 border-2 border-blue-200 shadow-sm"
   const fieldStaticClasses = "bg-gray-50"
+  const schoolInitial = schoolName?.trim().charAt(0).toUpperCase() || "?"
 
   return (
-    <section className="w-full max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-24">
+    <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28">
       {saveMessage && (
         <div
           className={`mb-6 px-4 py-3 rounded-lg border-2 ${
@@ -113,13 +114,11 @@ const SchoolProfile = () => {
 
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
         {/* Cabeçalho */}
-        <div className="relative flex flex-col sm:flex-row sm:items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 h-40 sm:h-44 lg:h-48">
-          <div className="absolute top-6 sm:top-auto sm:left-10 transform transition-transform duration-300 hover:scale-105 flex justify-center sm:justify-start w-full sm:w-auto">
-            <img
-              src="/default-profile.png"
-              alt="Logo da escola"
-              className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full border-4 border-white shadow-lg object-cover"
-            />
+        <div className="pt-4 bg-gradient-to-r from-blue-600 to-blue-700 h-28 sm:h-36 lg:h-40 relative flex items-center justify-center">
+          <div className="absolute left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 transform transition-transform duration-300 hover:scale-105">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-sky-500/75 border-4 border-white shadow-lg flex items-center justify-center text-gray-900 font-bold text-2xl sm:text-3xl lg:text-4xl">
+              {schoolInitial}
+            </div>
           </div>
           {isEditing && (
             <div className="absolute right-4 sm:right-6 top-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border border-yellow-300">
@@ -132,8 +131,8 @@ const SchoolProfile = () => {
         <div className="pt-20 pb-8 px-4 sm:px-8">
           {/* Nome e Email */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 text-center sm:text-left">
-            <div className="flex-1">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 break-words">
+            <div className="mb-6 text-center sm:text-left">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
                 {schoolName}
               </h2>
               <div className="mt-2 inline-block bg-gray-50 px-3 py-2 rounded-lg">

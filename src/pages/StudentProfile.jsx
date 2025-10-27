@@ -1,4 +1,3 @@
-// src/components/StudentProfile.jsx
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Security/AuthContext";
@@ -96,16 +95,17 @@ const StudentProfile = () => {
   const fieldBaseClasses = "p-4 rounded-lg transition-all duration-200";
   const fieldEditingClasses = "bg-blue-50 border-2 border-blue-200";
   const fieldStaticClasses = "bg-gray-50";
+  const studentInitial = fullName?.trim().charAt(0).toUpperCase() || "?"
+
 
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28">
       {saveMessage && (
         <div
-          className={`mb-6 px-4 py-3 rounded-lg border-2 ${
-            saveMessage.includes("Erro")
+          className={`mb-6 px-4 py-3 rounded-lg border-2 ${saveMessage.includes("Erro")
               ? "bg-red-50 border-red-300 text-red-700 shadow-sm"
               : "bg-green-50 border-green-300 text-green-700 shadow-sm"
-          }`}>
+            }`}>
           <div className="flex items-center text-sm sm:text-base">
             {saveMessage.includes("Erro") ? (
               <span className="text-red-500 mr-2">⚠️</span>
@@ -121,11 +121,10 @@ const StudentProfile = () => {
         {/* Header */}
         <div className="pt-4 bg-gradient-to-r from-blue-600 to-blue-700 h-28 sm:h-36 lg:h-40 relative flex items-center justify-center">
           <div className="absolute left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 transform transition-transform duration-300 hover:scale-105">
-            <img
-              src="/default-profile.png"
-              alt="Foto de perfil"
-              className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-lg object-cover"
-            />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-sky-500/75 border-4 border-white shadow-lg flex items-center justify-center text-gray-900 font-bold text-2xl sm:text-3xl lg:text-4xl">
+              {studentInitial}
+            </div>
+
           </div>
           {isEditing && (
             <div className="absolute right-4 sm:right-6 top-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border border-yellow-300">
@@ -163,11 +162,10 @@ const StudentProfile = () => {
                 onChange={handleChange}
                 onFocus={() => handleFocus("socialName")}
                 onBlur={handleBlur}
-                className={`${inputBaseClasses} ${
-                  activeField === "socialName"
+                className={`${inputBaseClasses} ${activeField === "socialName"
                     ? inputActiveClasses
                     : inputInactiveClasses
-                }`}
+                  }`}
                 placeholder="Digite seu nome social"
               />
             </div>
@@ -199,9 +197,8 @@ const StudentProfile = () => {
 
             {/* Estado */}
             <div
-              className={`${fieldBaseClasses} ${
-                isEditing ? fieldEditingClasses : fieldStaticClasses
-              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses
+                } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Estado
                 {isEditing && (
@@ -216,11 +213,10 @@ const StudentProfile = () => {
                   onChange={handleChange}
                   onFocus={() => handleFocus("addressState")}
                   onBlur={handleBlur}
-                  className={`${inputBaseClasses} ${
-                    activeField === "addressState"
+                  className={`${inputBaseClasses} ${activeField === "addressState"
                       ? inputActiveClasses
                       : inputInactiveClasses
-                  }`}
+                    }`}
                   placeholder="Ex: São Paulo"
                 />
               ) : (
@@ -232,9 +228,8 @@ const StudentProfile = () => {
 
             {/* Cidade */}
             <div
-              className={`${fieldBaseClasses} ${
-                isEditing ? fieldEditingClasses : fieldStaticClasses
-              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses
+                } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Cidade
                 {isEditing && (
@@ -249,11 +244,10 @@ const StudentProfile = () => {
                   onChange={handleChange}
                   onFocus={() => handleFocus("addressCity")}
                   onBlur={handleBlur}
-                  className={`${inputBaseClasses} ${
-                    activeField === "addressCity"
+                  className={`${inputBaseClasses} ${activeField === "addressCity"
                       ? inputActiveClasses
                       : inputInactiveClasses
-                  }`}
+                    }`}
                   placeholder="Ex: Campinas"
                 />
               ) : (
@@ -265,9 +259,8 @@ const StudentProfile = () => {
 
             {/* Bairro */}
             <div
-              className={`${fieldBaseClasses} ${
-                isEditing ? fieldEditingClasses : fieldStaticClasses
-              } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
+              className={`${fieldBaseClasses} ${isEditing ? fieldEditingClasses : fieldStaticClasses
+                } border ${isEditing ? "border-blue-200" : "border-gray-200"}`}>
               <span className="text-sm font-semibold text-gray-700">
                 Bairro
                 {isEditing && (
@@ -282,11 +275,10 @@ const StudentProfile = () => {
                   onChange={handleChange}
                   onFocus={() => handleFocus("addressNeighborhood")}
                   onBlur={handleBlur}
-                  className={`${inputBaseClasses} ${
-                    activeField === "addressNeighborhood"
+                  className={`${inputBaseClasses} ${activeField === "addressNeighborhood"
                       ? inputActiveClasses
                       : inputInactiveClasses
-                  }`}
+                    }`}
                   placeholder="Ex: Centro"
                 />
               ) : (
