@@ -15,7 +15,7 @@ const SchoolControlPainel = () => {
         e acompanhar seus feedbacks recebidos.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <NavLink
           to="/schoolprofile"
           className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
@@ -24,7 +24,14 @@ const SchoolControlPainel = () => {
             Edite as informações da escola e mantenha tudo atualizado.
           </p>
         </NavLink>
-
+        <NavLink
+          to="/registeredfeedbacks"
+          className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
+          <h2 className="text-red-600 font-bold text-xl mb-2">Feedbacks</h2>
+          <p className="text-gray-600 text-sm">
+            Veja os feedbacks registrados da sua escola
+          </p>
+        </NavLink>
         <NavLink
           to="/createfeedback"
           className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">

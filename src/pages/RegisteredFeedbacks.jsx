@@ -1,133 +1,141 @@
-import { useEffect, useState } from "react"
-import { useAuth } from "../Security/AuthContext"
-import { api } from "../api/api"
+// src/components/RegisteredFeedbacks/RegisteredFeedbacks.jsx
+import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../Security/AuthContext";
+import { api } from "../api/api";
+import LoadingSpinner from "../components/commom/LoadingSpinner";
+import ErrorState from "../components/commom/ErrorState";
+import AdminFeedbackView from "../components/RegisteredFeedbacks/AdminFeedbackView";
+import SchoolFeedbackView from "../components/RegisteredFeedbacks/SchoolFeedbackView";
+import StudentFeedbackView from "../components/RegisteredFeedbacks/StudentFeedbackView";
+import SchoolDetailsModal from "../components/RegisteredFeedbacks/SchoolDetailsModal";
 
-export default function RegisteredFeedbacks() {
-  const { user } = useAuth()
-  const [feedbacks, setFeedbacks] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState("")
-  const schoolInitial = user?.school?.schoolName?.charAt(0).toUpperCase() || "?"
+const RegisteredFeedbacks = () => {
+  const { user } = useAuth();
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [schoolTags, setSchoolTags] = useState({ positive: [], negative: [] });
 
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      let data;
+      switch (user?.userType) {
+        case "admin":
+          data = await api.getAllSchoolsWithFeedbackAdmin();
+          break;
+        case "school":
+          data = await api.getMySchoolFeedback();
+          break;
+        case "student":
+          data = await api.getStudentSchoolFeedback();
+          break;
+        default:
+          throw new Error("Unauthorized access - invalid user type");
+      }
+      setFeedbacks(data);
+    } catch (err) {
+      console.error("Error fetching feedbacks:", err);
+      setError(err.response?.data?.error || "Failed to load feedbacks");
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.userType]);
 
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      console.log("Usuário carregado no contexto:", user)
-
-      if (!user?.school?.schoolId) {
-        console.warn("Nenhum schoolId encontrado no user:", user)
-        setErrorMessage("Nenhuma escola associada ao usuário.")
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        setErrorMessage("")
-
-        const feedbacksData = await api.getFeedbackBySchool(user.school.schoolId)
-        console.log("Feedbacks recebidos:", feedbacksData)
-
-        setFeedbacks(feedbacksData || [])
-      } catch (err) {
-        console.error("Erro ao buscar feedbacks:", err)
-        setErrorMessage(
-          err.response?.data?.error ||
-          "Erro ao carregar feedbacks da escola. Veja o console para detalhes."
-        )
-      } finally {
-        setLoading(false)
-      }
+    if (user) {
+      fetchFeedbacks();
     }
+  }, [user, fetchFeedbacks]);
 
-    fetchFeedbacks()
-  }, [user])
+  const handleSchoolSelect = async (schoolFeedback) => {
+    setSelectedSchool(schoolFeedback);
+    try {
+      const [positiveTags, negativeTags] = await Promise.all([
+        api.getPositiveTagsBySchool(schoolFeedback.school.school_id),
+        api.getNegativeTagsBySchool(schoolFeedback.school.school_id),
+      ]);
+      setSchoolTags({
+        positive: positiveTags,
+        negative: negativeTags,
+      });
+    } catch (err) {
+      console.error("Error fetching tags:", err);
+    }
+  };
 
-  if (!user) {
-    return (
-      <section className="pt-28 text-center text-gray-700">
-        <p>Carregando informações do usuário...</p>
-      </section>
-    )
+  const handleCloseModal = () => {
+    setSelectedSchool(null);
+    setSchoolTags({ positive: [], negative: [] });
+  };
+
+  if (loading) {
+    return <LoadingSpinner message="Carregando feedbacks..." />;
   }
 
+  if (error) {
+    return <ErrorState error={error} onRetry={fetchFeedbacks} />;
+  }
+
+  const getRoleBasedContent = () => {
+    switch (user?.userType) {
+      case "admin":
+        return (
+          <AdminFeedbackView
+            feedbacks={feedbacks}
+            onSchoolSelect={handleSchoolSelect}
+          />
+        );
+      case "school":
+        return <SchoolFeedbackView schoolFeedback={feedbacks} />;
+      case "student":
+        return <StudentFeedbackView schoolFeedback={feedbacks} />;
+      default:
+        return <ErrorState error="Função de usuário não reconhecida" />;
+    }
+  };
+
+  const getPageDescription = () => {
+    switch (user?.userType) {
+      case "admin":
+        return "Visualize e gerencie feedbacks de todas as escolas";
+      case "school":
+        return "Acompanhe os feedbacks recebidos pelos estudantes";
+      case "student":
+        return "Veja o que outros estudantes estão dizendo sobre a escola";
+      default:
+        return "";
+    }
+  };
+
   return (
-    <section className="pt-28 w-full max-w-5xl mx-auto px-6">
-      <h1 className="text-center mb-4 text-blue-600 text-4xl font-bold">
-        Feedbacks Registrados
-      </h1>
-
-      <p className="text-center text-gray-700 text-lg mb-10">
-        Aqui estão todos os feedbacks registrados na escola{" "}
-        <strong>{user.school?.schoolName || "Desconhecida"}</strong>.
-      </p>
-
-      {loading ? (
-        <p className="text-center text-gray-600">Carregando feedbacks...</p>
-      ) : errorMessage ? (
-        <p className="text-center text-red-600">{errorMessage}</p>
-      ) : feedbacks.length === 0 ? (
-        <p className="text-center text-gray-500">
-          Nenhum feedback encontrado para esta escola.
+    <main className="pt-28 flex justify-center px-2">
+      <section className="w-full max-w-7xl mx-auto">
+        <h1 className="flex justify-center mb-6 text-blue-600 text-2xl sm:text-3xl font-bold">
+          Feedbacks Registrados
+        </h1>
+        <p className="text-center text-gray-600 mb-8 text-lg">
+          {getPageDescription()}
         </p>
-      ) : (
-        <div className="space-y-6">
-          {feedbacks.map((item) => (
-            <div
-              key={item.feedback_id}
-              className="flex flex-col md:flex-row items-start bg-white shadow rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-200"
-            >
-              <div className="flex-shrink-0">
-                <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl border border-blue-300">
-                  {schoolInitial}
-                </div>
 
-              </div>
-
-              <div className="mt-4 md:mt-0 md:ml-6 flex-1">
-                <div className="flex flex-wrap justify-between items-center">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {user.school.schoolName}
-                  </h2>
-                  <span className="text-sm text-gray-500">
-                    {new Date(item.created_at).toLocaleDateString("pt-BR")}
-                  </span>
-                </div>
-
-                {/* Tags associadas */}
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {item.tags?.map((tag) => {
-                    const type = tag.type?.toUpperCase()
-
-                    let tagStyle = "bg-gray-100 text-gray-800 border border-gray-300"
-                    let icon = "ℹ️"
-
-                    if (type === "NEGATIVE") {
-                      tagStyle = "bg-red-100 text-red-700 border border-red-300"
-                      icon = "❌"
-                    } else if (type === "POSITIVE") {
-                      tagStyle = "bg-green-100 text-green-700 border border-green-300"
-                      icon = "✅"
-                    } else if (type === "NEUTRAL") {
-                      tagStyle = "bg-yellow-100 text-yellow-700 border border-yellow-300"
-                      icon = "⚠️"
-                    }
-
-                    return (
-                      <span
-                        key={tag.tag_id}
-                        className={`inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full ${tagStyle}`}
-                      >
-                        {icon} {tag.tag_nome}
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4 sm:p-6">
+          {getRoleBasedContent()}
         </div>
-      )}
-    </section>
-  )
-}
+
+        {/* School Details Modal */}
+        {selectedSchool && (
+          <SchoolDetailsModal
+            schoolFeedback={selectedSchool}
+            tags={schoolTags}
+            onClose={handleCloseModal}
+          />
+        )}
+      </section>
+    </main>
+  );
+};
+
+export default RegisteredFeedbacks;

@@ -13,7 +13,6 @@ import SchoolProfile from "./pages/SchoolProfile.jsx";
 import StudentProfile from "./pages/StudentProfile.jsx";
 import ComplaintRegister from "./pages/ComplaintRegister.jsx";
 import CreateFeedbackBySchool from "./pages/CreateFeedbackBySchool.jsx";
-import SchoolsWithFeedback from "./pages/SchoolsWithFeedback.jsx";
 import RegisteredFeedbacks from "./pages/RegisteredFeedbacks.jsx";
 
 import AdminControlPainel from "./pages/AdminControlPanel.jsx";
@@ -38,14 +37,6 @@ const App = () => {
             <Route path="/signup-school" element={<SignUpSchool />} />
             <Route path="/signup-admin" element={<SignUpAdmin />} />
 
-            <Route
-              path="/schoolsfeedback"
-              element={
-                <ProtectedRoute allowedUserTypes={["admin"]}>
-                  <SchoolsWithFeedback />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/seepubliccomplaints"
               element={<SeePublicComplaints />}
@@ -112,7 +103,8 @@ const App = () => {
             <Route
               path="/registeredfeedbacks"
               element={
-                <ProtectedRoute allowedUserTypes={["student"]}>
+                <ProtectedRoute
+                  allowedUserTypes={["student", "admin", "school"]}>
                   <RegisteredFeedbacks />
                 </ProtectedRoute>
               }
