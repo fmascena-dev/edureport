@@ -176,13 +176,23 @@ export const api = {
   },
 
   getPositiveTagsBySchool: async (schoolId) => {
-    const res = await axiosInstance.get(`/tags/school/${schoolId}/positive`);
-    return res.data;
+    try {
+      const res = await axiosInstance.get(`/tags/school/${schoolId}/positive`);
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching positive tags:", error.response?.data);
+      throw error;
+    }
   },
 
   getNegativeTagsBySchool: async (schoolId) => {
-    const res = await axiosInstance.get(`/tags/school/${schoolId}/negative`);
-    return res.data;
+    try {
+      const res = await axiosInstance.get(`/tags/school/${schoolId}/negative`);
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching negative tags:", error.response?.data);
+      throw error;
+    }
   },
 
   createTag: async (schoolId, tagData) => {
@@ -226,8 +236,14 @@ export const api = {
 
   //métodos de feedback:
   createFeedback: async (feedbackData) => {
-    const res = await axiosInstance.post("/feedback", feedbackData);
-    return res.data;
+    try {
+      console.log("Sending feedback data:", feedbackData); // Debug log
+      const res = await axiosInstance.post("/feedback", feedbackData);
+      return res.data;
+    } catch (error) {
+      console.error("Error creating feedback:", error.response?.data);
+      throw error;
+    }
   },
 
   // Get feedback by student[id] (if needed)
@@ -246,5 +262,20 @@ export const api = {
   getMyFeedback: async () => {
     const res = await axiosInstance.get("/feedback/my-feedback");
     return res.data;
+  },
+
+  getMyCurrentFeedback: async () => {
+    try {
+      const res = await axiosInstance.get("/feedback/my-feedback/current");
+      return res.data;
+    } catch (error) {
+      // If it's a 400 error, it might mean no feedback exists yet - that's ok
+      if (error.response?.status === 400) {
+        console.log("No current feedback found (this is normal for new users)");
+        return null;
+      }
+      console.error("Error in getMyCurrentFeedback:", error.response?.data);
+      throw error;
+    }
   },
 };
