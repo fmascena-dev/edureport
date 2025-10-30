@@ -84,11 +84,7 @@ const ComplaintRegister = () => {
       return;
     }
 
-    if (selectedBad.length === 0 && selectedGood.length === 0) {
-      alert("Selecione pelo menos uma tag positiva ou negativa.");
-      return;
-    }
-
+    // Allow submission even if no tags are selected (to remove feedback)
     try {
       setIsSubmitting(true);
       const allSelectedTagIds = [
@@ -107,11 +103,15 @@ const ComplaintRegister = () => {
       const updatedFeedback = await api.getMyCurrentFeedback();
       setCurrentFeedback(updatedFeedback);
 
-      alert(
-        currentFeedback
-          ? "Feedback atualizado com sucesso!"
-          : "Feedback enviado com sucesso!"
-      );
+      if (allSelectedTagIds.length === 0) {
+        alert("Feedback removido com sucesso!");
+      } else {
+        alert(
+          currentFeedback
+            ? "Feedback atualizado com sucesso!"
+            : "Feedback enviado com sucesso!"
+        );
+      }
     } catch (error) {
       console.error("Failed to submit feedback", error);
       alert(
@@ -122,6 +122,13 @@ const ComplaintRegister = () => {
       setIsSubmitting(false);
     }
   };
+
+  // Check if the form can be submitted
+  const canSubmit = !isSubmitting && schoolId;
+
+  // Check if user has existing feedback with actual tags
+  const hasExistingFeedbackWithTags =
+    currentFeedback && currentFeedback.tags && currentFeedback.tags.length > 0;
 
   if (authLoading || isLoading) {
     return (
@@ -154,15 +161,6 @@ const ComplaintRegister = () => {
         <h1 className="flex justify-center mb-6 text-blue-600 text-2xl sm:text-3xl font-bold">
           Feedback para Escola
         </h1>
-
-        {currentFeedback && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-blue-700 text-center">
-              ✏️ Você já enviou feedback anteriormente. Selecione/deselecione as
-              tags abaixo para atualizar.
-            </p>
-          </div>
-        )}
 
         <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
           <h2 className="text-center p-2 font-semibold text-xl">
@@ -218,7 +216,9 @@ const ComplaintRegister = () => {
 
               {selectedBad.length === 0 && selectedGood.length === 0 && (
                 <p className="text-gray-500 text-sm sm:text-base italic">
-                  Selecione tags abaixo para avaliar sua escola.
+                  {currentFeedback
+                    ? "Nenhuma tag selecionada. Seu feedback será removido ao atualizar."
+                    : "Selecione tags abaixo para avaliar sua escola."}
                 </p>
               )}
             </div>
@@ -290,19 +290,15 @@ const ComplaintRegister = () => {
           <div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-4">
             <button
               onClick={handleSubmit}
-              disabled={
-                isSubmitting ||
-                (selectedBad.length === 0 && selectedGood.length === 0)
-              }
+              disabled={!canSubmit}
               className={`font-semibold px-6 py-2 w-full sm:w-48 rounded-lg cursor-pointer ${
-                isSubmitting ||
-                (selectedBad.length === 0 && selectedGood.length === 0)
+                !canSubmit
                   ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}>
               {isSubmitting
                 ? "Enviando..."
-                : currentFeedback
+                : currentFeedback && hasExistingFeedbackWithTags
                 ? "Atualizar Feedback"
                 : "Enviar Feedback"}
             </button>
@@ -314,6 +310,18 @@ const ComplaintRegister = () => {
             </NavLink>
           </div>
         </div>
+        {hasExistingFeedbackWithTags && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <p className="text-blue-700 text-center">
+              ✏️ Você já enviou feedback anteriormente. Selecione/deselecione as
+              tags abaixo para atualizar.{" "}
+              <strong>
+                Para remover completamente seu feedback, desmarque todas as
+                tags.
+              </strong>
+            </p>
+          </div>
+        )}
       </section>
     </main>
   );
