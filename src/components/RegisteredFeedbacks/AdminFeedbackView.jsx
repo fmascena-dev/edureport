@@ -45,9 +45,6 @@ const AdminFeedbackView = ({ feedbacks, onSchoolSelect }) => {
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Todas as Escolas com Feedback
         </h2>
-        <p className="text-gray-600">
-          Visualize e gerencie feedbacks de todas as escolas
-        </p>
       </div>
 
       {/* Search Bar */}

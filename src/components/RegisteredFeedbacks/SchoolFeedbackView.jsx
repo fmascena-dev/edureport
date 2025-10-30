@@ -40,15 +40,6 @@ const SchoolFeedbackView = ({ schoolFeedback }) => {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Feedback da Minha Escola
-        </h2>
-        <p className="text-gray-600">
-          Acompanhe os feedbacks recebidos pelos estudantes
-        </p>
-      </div>
-
       {/* School Info Header */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center mb-6">
         <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl border border-blue-300 shadow-sm">
