@@ -8,7 +8,7 @@ import AdminFeedbackView from "../components/RegisteredFeedbacks/AdminFeedbackVi
 import SchoolFeedbackView from "../components/RegisteredFeedbacks/SchoolFeedbackView";
 import StudentFeedbackView from "../components/RegisteredFeedbacks/StudentFeedbackView";
 import SchoolDetailsModal from "../components/RegisteredFeedbacks/SchoolDetailsModal";
-import ButtonBackWindow from "../components/ButtonBack/buttonbackwindow";
+import ButtonBackWindow from "../components/ButtonBack/ButtonBackWindow";
 
 const RegisteredFeedbacks = () => {
   const { user } = useAuth();
