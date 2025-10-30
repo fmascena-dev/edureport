@@ -8,6 +8,7 @@ import AdminFeedbackView from "../components/RegisteredFeedbacks/AdminFeedbackVi
 import SchoolFeedbackView from "../components/RegisteredFeedbacks/SchoolFeedbackView";
 import StudentFeedbackView from "../components/RegisteredFeedbacks/StudentFeedbackView";
 import SchoolDetailsModal from "../components/RegisteredFeedbacks/SchoolDetailsModal";
+import ButtonBackWindow from "../components/ButtonBack/buttonbackwindow";
 
 const RegisteredFeedbacks = () => {
   const { user } = useAuth();
@@ -133,6 +134,10 @@ const RegisteredFeedbacks = () => {
             onClose={handleCloseModal}
           />
         )}
+
+        <div className="mt-4 mb-2 flex justify-center">
+          <ButtonBackWindow usersType={user?.userType} />
+        </div>
       </section>
     </main>
   );
