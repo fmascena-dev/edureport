@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Security/AuthContext";
 import { api } from "../api/api";
+import ButtonBackWindow from "../components/ButtonBack/ButtonBackWindow"
 
 const StudentProfile = () => {
   const { user, refreshUserProfile } = useAuth();
@@ -307,13 +308,13 @@ const StudentProfile = () => {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="w-full sm:w-auto px-6 py-2  bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                   {loading ? "Salvando..." : "Salvar Alterações"}
                 </button>
                 <button
                   onClick={handleCancel}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl">
+                  className="w-full sm:w-auto px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-500 transition-all duration-200 shadow-lg hover:shadow-lg cursor-pointer">
                   Cancelar
                 </button>
               </>
@@ -321,14 +322,10 @@ const StudentProfile = () => {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center">
+                  className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer">
                   Editar Perfil
                 </button>
-                <NavLink to="/studentcontrolpanel" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center">
-                    Voltar ao Painel
-                  </button>
-                </NavLink>
+                <ButtonBackWindow/>
               </>
             )}
           </div>
