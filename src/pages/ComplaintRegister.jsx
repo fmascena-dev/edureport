@@ -162,19 +162,6 @@ const ComplaintRegister = () => {
           Feedback para Escola
         </h1>
 
-        {hasExistingFeedbackWithTags && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-blue-700 text-center">
-              ✏️ Você já enviou feedback anteriormente. Selecione/deselecione as
-              tags abaixo para atualizar.{" "}
-              <strong>
-                Para remover completamente seu feedback, desmarque todas as
-                tags.
-              </strong>
-            </p>
-          </div>
-        )}
-
         <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
           <h2 className="text-center p-2 font-semibold text-xl">
             {schoolName}
@@ -323,6 +310,18 @@ const ComplaintRegister = () => {
             </NavLink>
           </div>
         </div>
+        {hasExistingFeedbackWithTags && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <p className="text-blue-700 text-center">
+              ✏️ Você já enviou feedback anteriormente. Selecione/deselecione as
+              tags abaixo para atualizar.{" "}
+              <strong>
+                Para remover completamente seu feedback, desmarque todas as
+                tags.
+              </strong>
+            </p>
+          </div>
+        )}
       </section>
     </main>
   );
