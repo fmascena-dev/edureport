@@ -54,11 +54,17 @@ const CreateFeedbackBySchool = () => {
         tag_positivo_negativo: type === "GOOD" ? "positive" : "negative",
       };
 
-      await api.createTag(schoolId, tagData);
-      fetchTags(); // Refresh the tags list
+      // API call returns the created tag
+      const createdTag = await api.createTag(schoolId, tagData);
 
-      if (type === "GOOD") setNewGood("");
-      else setNewBad("");
+      // Instead of re-fetching, just append to the existing list
+      if (type === "GOOD") {
+        setGoodTags((prev) => [...prev, createdTag]);
+        setNewGood("");
+      } else {
+        setBadTags((prev) => [...prev, createdTag]);
+        setNewBad("");
+      }
     } catch (error) {
       console.error("Error creating tag:", error);
       alert("Erro ao criar tag. Tente novamente.");
@@ -75,11 +81,20 @@ const CreateFeedbackBySchool = () => {
     if (selectedToRemove.length === 0 || !schoolId) return;
 
     try {
-      // Delete all selected tags
-      await Promise.all(selectedToRemove.map((id) => api.deleteTag(id)));
+      // Optimistically remove tags from UI first
+      setGoodTags((prev) =>
+        prev.filter((tag) => !selectedToRemove.includes(tag.tag_id))
+      );
+      setBadTags((prev) =>
+        prev.filter((tag) => !selectedToRemove.includes(tag.tag_id))
+      );
 
+      // Reset selected state
+      const idsToDelete = [...selectedToRemove];
       setSelectedToRemove([]);
-      fetchTags(); // Refresh the tags list
+
+      // Perform the deletions on the server
+      await Promise.all(idsToDelete.map((id) => api.deleteTag(id)));
     } catch (error) {
       console.error("Error deleting tags:", error);
       alert("Erro ao excluir tags. Tente novamente.");
