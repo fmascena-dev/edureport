@@ -113,7 +113,7 @@ const RegisteredFeedbacks = () => {
   };
 
   return (
-    <main className="pt-28 flex justify-center px-2">
+    <main className="pt-28 flex justify-center px-2 mb-2">
       <section className="w-full max-w-7xl mx-auto">
         <h1 className="flex justify-center mb-6 text-blue-600 text-2xl sm:text-3xl font-bold">
           Feedbacks Registrados

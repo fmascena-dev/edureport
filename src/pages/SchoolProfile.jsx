@@ -1,8 +1,8 @@
-// src/components/SchoolProfile.jsx
 import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../Security/AuthContext"
 import { api } from "../api/api"
+import ButtonBackWindow from "../components/ButtonBack/ButtonBackWindow"
 
 const SchoolProfile = () => {
   const { user, refreshUserProfile } = useAuth()
@@ -92,7 +92,7 @@ const SchoolProfile = () => {
   const schoolInitial = schoolName?.trim().charAt(0).toUpperCase() || "?"
 
   return (
-    <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28">
+    <section className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-28  mt-12 lg:mt-2 ">
       {saveMessage && (
         <div
           className={`mb-6 px-4 py-3 rounded-lg border-2 ${
@@ -112,7 +112,7 @@ const SchoolProfile = () => {
         </div>
       )}
 
-      <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+      <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200 ">
         {/* Cabeçalho */}
         <div className="pt-4 bg-gradient-to-r from-blue-600 to-blue-700 h-28 sm:h-36 lg:h-40 relative flex items-center justify-center">
           <div className="absolute left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 transform transition-transform duration-300 hover:scale-105">
@@ -289,8 +289,7 @@ const SchoolProfile = () => {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 flex items-center justify-center text-sm sm:text-base"
-                >
+                  className="w-48 px-6 py-2  bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                   {loading ? (
                     <>
                       <svg
@@ -322,8 +321,7 @@ const SchoolProfile = () => {
                 <button
                   onClick={handleCancel}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
-                >
+                  className="w-48 px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-500 transition-all duration-200 shadow-lg hover:shadow-lg cursor-pointer">
                   Cancelar
                 </button>
               </>
@@ -331,15 +329,10 @@ const SchoolProfile = () => {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center text-sm sm:text-base"
-                >
+                  className="w-40 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer">
                   Editar Perfil
                 </button>
-                <NavLink to="/schoolcontrolpanel" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center text-sm sm:text-base">
-                    Voltar ao Painel
-                  </button>
-                </NavLink>
+                <ButtonBackWindow/>
               </>
             )}
           </div>
