@@ -33,6 +33,7 @@ const schema = z
     password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"), // Senha precisa ter 6+ caracteres
     confirmPassword: z.string(), // Confirmação da senha (validado com refine)
     schoolName: z.string().min(2, "Escola obrigatória"), // Nome da escola
+    schoolId: z.number().nullable(),
   })
   // Verifica se as senhas coincidem
   .refine((data) => data.password === data.confirmPassword, {
@@ -87,10 +88,11 @@ const SignUpForm = () => {
     register, // Registra campos simples (input, select)
     control, // Necessário para campos controlados (ex: DateField com Controller)
     handleSubmit, // Função para lidar com envio
+    setValue,
     formState: { errors }, // Objeto contendo erros de validação
   } = useForm({
     resolver: zodResolver(schema), // Integração com Zod
-    defaultValues: { dateOfBirth: "" }, // Valor inicial vazio para data
+    defaultValues: { dateOfBirth: "", schoolId: null }, // Valor inicial vazio para data
   });
 
   const navigate = useNavigate();
@@ -117,17 +119,6 @@ const SignUpForm = () => {
   // Função chamada quando o formulário é enviado com sucesso
   const onSubmit = async (data) => {
     try {
-      const { data: schoolData } = await api.getSchoolByName(data.schoolName);
-
-      if (!schoolData) {
-        alert("Escola não encontrada.");
-        return;
-      }
-
-      const selectedSchool = Array.isArray(schoolData)
-        ? schoolData[0]
-        : schoolData;
-
       const payload = {
         fullName: data.fullName,
         socialName: data.socialName,
@@ -140,7 +131,7 @@ const SignUpForm = () => {
         addressState: data.state,
         addressCity: data.city,
         addressNeighborhood: data.neighborhood,
-        schoolId: selectedSchool.school_id,
+        schoolId: data.schoolId,
       };
 
       await api.signUpStudent(payload);
@@ -259,10 +250,18 @@ const SignUpForm = () => {
           control={control}
           render={({ field }) => (
             <AsyncSelect
-              casheOptions
+              cacheOptions
               loadOptions={loadSchoolOptions}
               defaultOptions={false}
-              onChange={(option) => field.onChange(option ? option.value : "")}
+              onChange={(option) => {
+                if (option) {
+                  field.onChange(option.value);
+                  setValue("schoolId", option.id);
+                } else {
+                  field.onChange("");
+                  setValue("schoolId", null);
+                }
+              }}
               placeholder="Digite o nome da sua escola..."
               menuPortalTarget={document.body}
               styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
