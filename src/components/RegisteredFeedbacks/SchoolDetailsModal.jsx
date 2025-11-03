@@ -1,20 +1,12 @@
 // src/components/RegisteredFeedbacks/SchoolDetailsModal.jsx
 const SchoolDetailsModal = ({ schoolFeedback, onClose }) => {
   const school = schoolFeedback.school;
-
-  const getTotalFeedbackCount = () => {
-    const positiveCount =
-      schoolFeedback.positiveTags?.reduce(
-        (sum, tag) => sum + (tag.usageCount || 0),
-        0
-      ) || 0;
-    const negativeCount =
-      schoolFeedback.negativeTags?.reduce(
-        (sum, tag) => sum + (tag.usageCount || 0),
-        0
-      ) || 0;
-    return positiveCount + negativeCount;
-  };
+  const uniqueStudentCount = schoolFeedback.uniqueStudentCount || 0;
+  const totalStudentCount = schoolFeedback.totalStudentCount || 0;
+  const participationRate =
+    totalStudentCount > 0
+      ? Math.round((uniqueStudentCount / totalStudentCount) * 100)
+      : 0;
 
   const getPositiveFeedbackCount = () => {
     return (
@@ -67,13 +59,29 @@ const SchoolDetailsModal = ({ schoolFeedback, onClose }) => {
           </div>
 
           {/* School Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-              <h4 className="text-blue-600 text-sm font-medium mb-2">
-                Total de Feedbacks
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-center">
+              <h4 className="text-indigo-600 text-sm font-medium mb-2">
+                Total de Alunos
               </h4>
-              <span className="text-2xl font-bold text-blue-800">
-                {getTotalFeedbackCount()}
+              <span className="text-2xl font-bold text-indigo-800">
+                {totalStudentCount}
+              </span>
+            </div>
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+              <h4 className="text-purple-600 text-sm font-medium mb-2">
+                Alunos Participantes
+              </h4>
+              <span className="text-2xl font-bold text-purple-800">
+                {uniqueStudentCount}
+              </span>
+            </div>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+              <h4 className="text-yellow-600 text-sm font-medium mb-2">
+                Taxa de Participação
+              </h4>
+              <span className="text-2xl font-bold text-yellow-800">
+                {participationRate}%
               </span>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
@@ -90,15 +98,6 @@ const SchoolDetailsModal = ({ schoolFeedback, onClose }) => {
               </h4>
               <span className="text-2xl font-bold text-red-800">
                 {getNegativeFeedbackCount()}
-              </span>
-            </div>
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
-              <h4 className="text-purple-600 text-sm font-medium mb-2">
-                Tags Únicas
-              </h4>
-              <span className="text-2xl font-bold text-purple-800">
-                {(schoolFeedback.positiveTags?.length || 0) +
-                  (schoolFeedback.negativeTags?.length || 0)}
               </span>
             </div>
           </div>
