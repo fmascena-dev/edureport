@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 import { api } from "../api/api";
 import { useAuth } from "../Security/AuthContext";
+import ButtonBackWindow from "../components/ButtonBack/ButtonBackWindow";
 
 const CreateFeedbackBySchool = () => {
   const { user, loading: authLoading } = useAuth();
@@ -12,22 +13,17 @@ const CreateFeedbackBySchool = () => {
   const [selectedToRemove, setSelectedToRemove] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get school ID and name from user context
   const schoolId = user?.schoolId;
   const schoolName = user?.schoolName || "Sua Escola";
 
-  // Use useCallback to memoize fetchTags and avoid dependency warnings
   const fetchTags = useCallback(async () => {
     if (!schoolId) return;
-
     try {
       setIsLoading(true);
-      // Fetch positive and negative tags separately
       const [positiveTags, negativeTags] = await Promise.all([
         api.getPositiveTagsBySchool(schoolId),
         api.getNegativeTagsBySchool(schoolId),
       ]);
-
       setGoodTags(positiveTags);
       setBadTags(negativeTags);
     } catch (error) {
@@ -36,28 +32,20 @@ const CreateFeedbackBySchool = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [schoolId]); // Add schoolId as dependency
+  }, [schoolId]);
 
   useEffect(() => {
-    if (schoolId) {
-      fetchTags();
-    }
-  }, [schoolId, fetchTags]); // Now fetchTags is stable and can be included in dependencies
+    if (schoolId) fetchTags();
+  }, [schoolId, fetchTags]);
 
-  // ... rest of your component remains the same
   const createTag = async (type, tagName) => {
     if (!schoolId || !tagName.trim()) return;
-
     try {
       const tagData = {
         tag_nome: tagName.trim(),
         tag_positivo_negativo: type === "GOOD" ? "positive" : "negative",
       };
-
-      // API call returns the created tag
       const createdTag = await api.createTag(schoolId, tagData);
-
-      // Instead of re-fetching, just append to the existing list
       if (type === "GOOD") {
         setGoodTags((prev) => [...prev, createdTag]);
         setNewGood("");
@@ -79,21 +67,15 @@ const CreateFeedbackBySchool = () => {
 
   const deleteSelected = async () => {
     if (selectedToRemove.length === 0 || !schoolId) return;
-
     try {
-      // Optimistically remove tags from UI first
       setGoodTags((prev) =>
         prev.filter((tag) => !selectedToRemove.includes(tag.tag_id))
       );
       setBadTags((prev) =>
         prev.filter((tag) => !selectedToRemove.includes(tag.tag_id))
       );
-
-      // Reset selected state
       const idsToDelete = [...selectedToRemove];
       setSelectedToRemove([]);
-
-      // Perform the deletions on the server
       await Promise.all(idsToDelete.map((id) => api.deleteTag(id)));
     } catch (error) {
       console.error("Error deleting tags:", error);
@@ -101,18 +83,17 @@ const CreateFeedbackBySchool = () => {
     }
   };
 
-  if (authLoading) {
+  if (authLoading)
     return (
       <main className="pt-28 flex justify-center">
         <div className="text-center">Carregando informações da escola...</div>
       </main>
     );
-  }
 
-  if (!schoolId) {
+  if (!schoolId)
     return (
-      <main className="pt-28 flex justify-center">
-        <div className="text-center text-red-600">
+      <main className="pt-28 flex justify-center px-4">
+        <div className="text-center text-red-600 max-w-md">
           <h2 className="text-xl font-semibold mb-4">Acesso Restrito</h2>
           <p>
             Esta funcionalidade está disponível apenas para usuários do tipo
@@ -123,37 +104,38 @@ const CreateFeedbackBySchool = () => {
           </p>
           <NavLink
             to="/schoolcontrolpanel"
-            className="text-blue-600 underline mt-4 inline-block">
+            className="text-blue-600 underline mt-4 inline-block"
+          >
             Voltar ao Painel
           </NavLink>
         </div>
       </main>
     );
-  }
 
-  if (isLoading) {
+  if (isLoading)
     return (
       <main className="pt-28 flex justify-center">
         <div className="text-center">Carregando tags...</div>
       </main>
     );
-  }
 
   return (
-    <main className="pt-28 flex justify-center">
-      <section className="w-full max-w-3xl mx-auto">
-        <h1 className="flex justify-center mb-2 text-blue-600 text-3xl font-bold">
+    <main className="pt-28 px-4 flex justify-center mb-4">
+      <section className="w-full max-w-6xl mx-auto">
+        {/* Título */}
+        <h1 className="text-center mb-2 text-blue-600 text-3xl font-bold">
           Criar Tags da Escola
         </h1>
-        <h2 className="flex justify-center mb-6 text-gray-600 text-xl">
-          {schoolName}
-        </h2>
+        <h2 className="text-center mb-6 text-gray-600 text-xl">{schoolName}</h2>
 
-        <div className="bg-white shadow-lg rounded-lg p-6 grid grid-cols-2 gap-6">
-          {/* NEGATIVAS */}
+        {/* Grid Responsivo */}
+        <div className="bg-white shadow-lg rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* TAGS NEGATIVAS */}
           <div>
-            <h2 className="text-red-500 font-semibold mb-2">Tags Negativas</h2>
-            <div className="flex gap-2 mb-3">
+            <h2 className="text-red-500 font-semibold mb-3 text-lg">
+              Tags Negativas
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
               <input
                 value={newBad}
                 onChange={(e) => setNewBad(e.target.value)}
@@ -161,11 +143,12 @@ const CreateFeedbackBySchool = () => {
                   e.key === "Enter" && newBad.trim() && createTag("BAD", newBad)
                 }
                 placeholder="Adicionar tag negativa..."
-                className="border rounded px-3 py-1 w-full"
+                className="border rounded px-3 py-2 w-full text-sm focus:ring-2 focus:ring-red-400 focus:outline-none"
               />
               <button
                 onClick={() => newBad.trim() && createTag("BAD", newBad)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+              >
                 +
               </button>
             </div>
@@ -174,11 +157,12 @@ const CreateFeedbackBySchool = () => {
                 <button
                   key={tag.tag_id}
                   onClick={() => toggleSelect(tag.tag_id)}
-                  className={`px-2 py-1 border rounded-full text-sm ${
+                  className={`px-3 py-1 border rounded-full text-sm transition ${
                     selectedToRemove.includes(tag.tag_id)
                       ? "bg-red-300 border-red-600"
                       : "border-red-400 hover:bg-red-50"
-                  }`}>
+                  }`}
+                >
                   {tag.tag_nome}
                 </button>
               ))}
@@ -190,12 +174,12 @@ const CreateFeedbackBySchool = () => {
             </div>
           </div>
 
-          {/* POSITIVAS */}
+          {/* TAGS POSITIVAS */}
           <div>
-            <h2 className="text-green-600 font-semibold mb-2">
+            <h2 className="text-green-600 font-semibold mb-3 text-lg">
               Tags Positivas
             </h2>
-            <div className="flex gap-2 mb-3">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
               <input
                 value={newGood}
                 onChange={(e) => setNewGood(e.target.value)}
@@ -205,11 +189,12 @@ const CreateFeedbackBySchool = () => {
                   createTag("GOOD", newGood)
                 }
                 placeholder="Adicionar tag positiva..."
-                className="border rounded px-3 py-1 w-full"
+                className="border rounded px-3 py-2 w-full text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
               />
               <button
                 onClick={() => newGood.trim() && createTag("GOOD", newGood)}
-                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+              >
                 +
               </button>
             </div>
@@ -218,11 +203,12 @@ const CreateFeedbackBySchool = () => {
                 <button
                   key={tag.tag_id}
                   onClick={() => toggleSelect(tag.tag_id)}
-                  className={`px-2 py-1 border rounded-full text-sm ${
+                  className={`px-3 py-1 border rounded-full text-sm transition ${
                     selectedToRemove.includes(tag.tag_id)
                       ? "bg-green-300 border-green-600"
                       : "border-green-400 hover:bg-green-50"
-                  }`}>
+                  }`}
+                >
                   {tag.tag_nome}
                 </button>
               ))}
@@ -235,23 +221,17 @@ const CreateFeedbackBySchool = () => {
           </div>
         </div>
 
-        {/* Botão de exclusão */}
-        <div className="flex justify-center mt-6">
+        {/* BOTÕES */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
           <button
             onClick={deleteSelected}
-            className="bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50"
-            disabled={selectedToRemove.length === 0}>
+            disabled={selectedToRemove.length === 0}
+            className="px-6 py-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 cursor-pointer"
+          >
             Remover Selecionadas ({selectedToRemove.length})
           </button>
-        </div>
 
-        {/* Voltar */}
-        <div className="flex justify-center mt-4">
-          <NavLink to="/schoolcontrolpanel">
-            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">
-              Voltar ao Painel
-            </button>
-          </NavLink>
+          <ButtonBackWindow />
         </div>
       </section>
     </main>

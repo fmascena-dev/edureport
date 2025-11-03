@@ -35,7 +35,7 @@ const SchoolControlPainel = () => {
         <NavLink
           to="/createfeedback"
           className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
-          <h2 className="text-red-600 font-bold text-xl mb-2">
+          <h2 className="text-green-700 font-bold text-xl mb-2">
             Tags de feedback
           </h2>
           <p className="text-gray-600 text-sm">
